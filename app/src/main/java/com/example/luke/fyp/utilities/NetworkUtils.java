@@ -15,7 +15,7 @@ import java.util.Scanner;
 
 public class NetworkUtils {
 
-    private static String apiKey = "xmdjedl4QAgkXR6zdQwAYWVuteyigeljVtwSxRTR" ;
+    private static String apiKey = "enter your API key here!" ;
 
     final static String BASE_URL =
             "https://api.nal.usda.gov/ndb/";
