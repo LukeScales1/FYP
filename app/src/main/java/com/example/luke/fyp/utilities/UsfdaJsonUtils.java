@@ -40,13 +40,15 @@ public final class UsfdaJsonUtils {
 
     public static Food[] getFoodDataFromJson(String foodJsonString) throws JSONException{
 
+        final String FDA_LIST = "list";
         final String FDA_ITEM = "item";
         final String FDA_GROUP = "group";
         final String FDA_NAME = "name";
         final String FDA_NDBNO = "ndbno";
 
         JSONObject foodJson = new JSONObject(foodJsonString);
-        JSONArray foodArray = foodJson.getJSONArray(FDA_ITEM);
+        JSONObject foodList = foodJson.getJSONObject(FDA_LIST);
+        JSONArray foodArray = foodList.getJSONArray(FDA_ITEM);
 
         Food[] foods = new Food[foodArray.length()];
 

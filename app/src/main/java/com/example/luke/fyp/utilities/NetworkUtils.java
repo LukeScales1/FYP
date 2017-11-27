@@ -24,7 +24,7 @@ public class NetworkUtils {
     final static String SEARCH = "search/?";
 
     final static String SEARCH_QUERY = "q";
-
+    final static String BRAND_QUERY = "ds";
     final static String API_QUERY = "api_key";
     final static String TYPE_QUERY = "type";
     final static String FORMAT_QUERY= "format";
@@ -32,6 +32,7 @@ public class NetworkUtils {
 
     private static String type = "b";
     private static String format = "json";
+    private static String brand = "Standard Reference";
 
     public static URL makeNdbnoUrl(String ndbno) {
         Uri builtUri = Uri.parse(BASE_URL + REPORTS).buildUpon()
@@ -52,6 +53,7 @@ public class NetworkUtils {
     public static URL makeSearchUrl(String search) {
         Uri builtUri = Uri.parse(BASE_URL + SEARCH).buildUpon()
                 .appendQueryParameter(SEARCH_QUERY, search)
+                .appendQueryParameter(BRAND_QUERY, brand)
                 .appendQueryParameter(FORMAT_QUERY, format)
                 .appendQueryParameter(API_QUERY, apiKey)
                 .build();

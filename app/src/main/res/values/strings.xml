@@ -1,3 +1,52 @@
 <resources>
     <string name="app_name">FYP</string>
+
+    <!--main cases-->
+    <string name="case_energy">Energy</string>
+    <string name="case_protein">Protein</string>
+    <string name="case_fat">Total lipid (fat)</string>
+    <string name="case_carbs">Carbohydrate, by difference</string>
+    <string name="case_fiber">Fiber, total dietary</string>
+    <string name="case_sugar">Sugars, total</string>
+    <string name="case_sodium">Sodium, Na</string>
+    <string name="case_saturated_fat">Fatty acids, total saturated</string>
+
+    <!-- main nutrient names -->
+    <string name="name_energy">Calories</string>
+    <string name="name_protein">Protein</string>
+    <string name="name_fat">Fat</string>
+    <string name="name_carbs">Carbohydrate</string>
+    <string name="name_fiber">Fiber</string>
+    <string name="name_sugar">Sugar</string>
+    <string name="name_sodium">Sodium</string>
+    <string name="name_saturated_fat">Saturated Fat</string>
+
+    <!--alternative cases - for potential future use-->
+    <string name="case_water">Water</string>
+    <string name="case_calcium">Calcium, Ca</string>
+    <string name="case_iron">Iron, Fe</string>
+    <string name="case_magnesium">Magnesium, Mg</string>
+    <string name="case_phosphoros">Phosphorus, P</string>
+    <string name="case_potassium">Potassium, K</string>
+    <string name="case_zinc">Zinc, Zn</string>
+    <string name="case_vit_c">Vitamin C, total ascorbic acid</string>
+    <string name="case_vit_b1">Thiamin</string>
+    <string name="case_vit_b2">Riboflavin</string>
+    <string name="case_vit_b3">Niacin</string>
+    <string name="case_vit_b6">Vitamin B-6</string>
+    <string name="case_vit_b9">Folate, DFE</string>
+    <string name="case_vit_b12">Vitamin B-12</string>
+    <string name="case_vit_a">Vitamin A, RAE</string>
+    <string name="case_vit_a_iu">Vitamin A, IU</string>
+    <string name="case_vit_e">Vitamin E(alpha-tocopherol)</string>
+    <string name="case_vit_d">Vitamin D(D2 + D3)</string>
+    <string name="case_vit_d_iu">Vitamin D</string>
+    <string name="case_vit_k">Vitamin K(phylloquinone)</string>
+    <string name="case_monounsaturated_fat">Fatty acids, total monounsaturated</string>
+    <string name="case_polyunsaturated_fat">Fatty acids, total polyunsaturated</string>
+    <string name="case_trans_fat">Fatty acids, total trans</string>
+    <string name="case_cholesterol">Cholesterol</string>
+    <string name="case_caffeine">Caffeine</string>
+
+    <string name="ndbno_apples">09003</string>
 </resources>

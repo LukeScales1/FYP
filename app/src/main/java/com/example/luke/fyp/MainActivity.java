@@ -1,5 +1,6 @@
 package com.example.luke.fyp;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -10,7 +11,6 @@ import android.widget.TextView;
 
 import com.example.luke.fyp.utilities.NetworkUtils;
 
-import java.io.IOException;
 import java.net.URL;
 
 public class MainActivity extends AppCompatActivity
@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity
 
         testBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v){
-               searchFoodDatabase();
+                retrieveNutrientData();
             }
         });
     }
@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity
         new FoodSearchTask().execute(fdaSearchUrl);
     }
 
-    private void retriveNutrientData(){
+    private void retrieveNutrientData(){
         search = testSearchInput.getText().toString();
         URL fdaSearchUrl = NetworkUtils.makeNdbnoUrl(search);
         testUrlText.setText(fdaSearchUrl.toString());
@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity
             try {
                 searchResults = NetworkUtils.getResponseFromHttpUrl(newSearch);
 
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             return searchResults;
@@ -75,7 +75,10 @@ public class MainActivity extends AppCompatActivity
         @Override
         protected void onPostExecute(String searchResults){
             if (searchResults != null && !searchResults.equals("")){
-                testResultsText.setText(searchResults);
+//                testResultsText.setText(searchResults);
+                Intent intent = new Intent(MainActivity.this, SearchResultsActivity.class);
+                intent.putExtra("Data", searchResults);
+                startActivity(intent);
             }
         }
     }
