@@ -1,46 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
+<ScrollView android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent">
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="18dp"
-    tools:context="com.example.luke.fyp.MainActivity">
+    tools:context="com.example.luke.fyp.activities.MainActivity">
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Enter ndbno for US FDA API here and search"
-        android:id="@+id/et_test"
-        android:textSize="20sp"/>
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/btn_test"
-        android:text="Search"/>
+    <!--<android.support.v7.widget.RecyclerView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:id="@+id/rv_ingredient_items">-->
+    <!--</android.support.v7.widget.RecyclerView>-->
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/tv_test_url"
-        android:text="URL formed from NetworkUtils will show here"
-        android:layout_marginTop="10dp"
-        android:textSize="20sp"/>
+        android:id="@+id/tv_test"/>
 
-    <ScrollView
+    <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp">
+        android:hint="@string/ingredient_search_prompt"
+        android:id="@+id/et_search"
+        android:textSize="20sp"/>
+        <!--android:inputType="textAutoCorrect"-->
 
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/tv_test_results"
-            android:text="JSON results from API will go here"
-            android:textSize="20sp"/>
-
-    </ScrollView>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn_search"
+        android:text="@string/search_button"/>
 
 </LinearLayout>
+</ScrollView>

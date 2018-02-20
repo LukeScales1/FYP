@@ -1,4 +1,4 @@
-package com.example.luke.fyp;
+package com.example.luke.fyp.activities;
 
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -8,6 +8,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.example.luke.fyp.Food;
+import com.example.luke.fyp.R;
 import com.example.luke.fyp.adapters.SearchResultsAdapter;
 import com.example.luke.fyp.utilities.NetworkUtils;
 import com.example.luke.fyp.utilities.UsfdaJsonUtils;
@@ -23,6 +25,7 @@ public class SearchResultsActivity extends AppCompatActivity implements SearchRe
 
     SearchResultsAdapter itemAdapter;
     List<Food> foodList = new ArrayList<>();
+    String resultName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +58,7 @@ public class SearchResultsActivity extends AppCompatActivity implements SearchRe
     @Override
     public void onItemClick(View v, int position) {
         Food food = foodList.get(position);
+        resultName = food.getName();
         URL nutrientRequestUrl = NetworkUtils.makeNdbnoUrl(food.getNdbno());
         new NutrientQueryTask().execute(nutrientRequestUrl);
 
@@ -80,6 +84,7 @@ public class SearchResultsActivity extends AppCompatActivity implements SearchRe
             if (searchResults != null && !searchResults.equals("")){
               Intent intent = new Intent(SearchResultsActivity.this, WeightActivity.class);
                 intent.putExtra("Nutrients", searchResults);
+                intent.putExtra("Name", resultName);
                 startActivity(intent);
             }
         }

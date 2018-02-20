@@ -1,12 +1,26 @@
+buildscript {
+    ext.kotlin_version = '1.2.21'
+
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.3"
+    compileSdkVersion 26
+    buildToolsVersion '26.0.2'
     defaultConfig {
         applicationId "com.example.luke.fyp"
-        minSdkVersion 23
-        targetSdkVersion 25
+        minSdkVersion 24
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -20,12 +34,42 @@ android {
 }
 
 dependencies {
+    implementation 'com.android.support:design:26.1.0'
+    implementation 'com.android.support:support-v4:26.1.0'
     compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:recyclerview-v7:25.3.1'
-    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support:recyclerview-v7:26.1.0'
+    compile 'com.android.support:appcompat-v7:26.1.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
+
+    //Kotlin
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    compile "org.jetbrains.kotlin:kotlin-stdlib"
+//    compile "org.jetbrains.kotlin:kotlin-reflect"
+//    testCompile "org.jetbrains.kotlin:kotlin-test"
+//    testCompile "org.jetbrains.kotlin:kotlin-test-junit"
+
+    // ViewModel and LiveData
+    implementation "android.arch.lifecycle:extensions:1.1.0"
+    // alternatively, just ViewModel
+    implementation "android.arch.lifecycle:viewmodel:1.1.0"
+    // alternatively, just LiveData
+    implementation "android.arch.lifecycle:livedata:1.1.0"
+    annotationProcessor "android.arch.lifecycle:compiler:1.1.0"
+    // Room (use 1.1.0-alpha1 for latest alpha)
+    implementation "android.arch.persistence.room:runtime:1.0.0"
+    annotationProcessor "android.arch.persistence.room:compiler:1.0.0"
+    // Paging
+    implementation "android.arch.paging:runtime:1.0.0-alpha5"
+    // Test helpers for LiveData
+    testImplementation "android.arch.core:core-testing:1.1.0"
+    // Test helpers for Room
+    testImplementation "android.arch.persistence.room:testing:1.0.0"
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+}
+repositories {
+    mavenCentral()
 }

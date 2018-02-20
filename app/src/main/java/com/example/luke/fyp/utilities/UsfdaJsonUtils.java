@@ -9,19 +9,26 @@ import org.json.JSONObject;
 
 /**
  * Created by Luke on 29/09/2017.
+ *
+ * Utility for processing the JSON retrieved from USDA servers.
+ *
  */
 
 public final class UsfdaJsonUtils {
 
     public static Nutrient[] getNutrientDataFromJson(String nutrientJsonString) throws JSONException{
 
+        final String FDA_REPORT = "report";
+        final String FDA_FOOD = "food";
         final String FDA_NUTRIENTS = "nutrients";
         final String FDA_NAME = "name";
         final String FDA_UNIT = "unit";
         final String FDA_VALUE = "value";
 
         JSONObject nutrientJson = new JSONObject(nutrientJsonString);
-        JSONArray nutrientArray = nutrientJson.getJSONArray(FDA_NUTRIENTS);
+        JSONObject nutrientReport = nutrientJson.getJSONObject(FDA_REPORT);
+        JSONObject nutrientFood = nutrientReport.getJSONObject(FDA_FOOD);
+        JSONArray nutrientArray = nutrientFood.getJSONArray(FDA_NUTRIENTS);
 
         Nutrient[] nutrients = new Nutrient[nutrientArray.length()];
 

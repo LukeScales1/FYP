@@ -13,6 +13,8 @@ import java.util.List;
 
 /**
  * Created by Luke on 25/10/2017.
+ *
+ * Adapter for applying nutritonal info to textview of WeightActivity. Work in Progress
  */
 
 public class NutritionalInfoAdapter extends RecyclerView.Adapter<NutritionalInfoAdapter.ViewHolder>{
@@ -21,32 +23,34 @@ public class NutritionalInfoAdapter extends RecyclerView.Adapter<NutritionalInfo
     private String nutrientName;
     private String nutrientVal;
     private String nutrientUnit;
-    private Integer foodWeight;
-    private Integer dynamicVal;
+    private Double foodWeight;
+    private Double dynamicVal;
 
-    public NutritionalInfoAdapter(List<Nutrient> nutrients){this.nutrientList = nutrients;}
-    public NutritionalInfoAdapter(Integer weight){this.foodWeight = weight;}
+    public NutritionalInfoAdapter(List<Nutrient> nutrients, Double weight){this.nutrientList = nutrients; this.foodWeight = weight;}
+//    public NutritionalInfoAdapter(Integer weight){this.foodWeight = weight;}
 
 
     public NutritionalInfoAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.search_results_item, parent, false);
+                .inflate(R.layout.nutrient_item, parent, false);
         return new NutritionalInfoAdapter.ViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Nutrient nutrient = nutrientList.get(position);
-        Integer weight = foodWeight;
+        Double multiplier = foodWeight/100;
         nutrientName = nutrient.getName();
         nutrientVal = nutrient.getValue();
         nutrientUnit = nutrient.getUnit();
 
-        Integer quantityPer100g = Integer.parseInt(nutrientVal);
-        dynamicVal = quantityPer100g * weight;
+        Double quantityPer100g = Double.parseDouble(nutrientVal);
+        dynamicVal = quantityPer100g * multiplier;
 
         holder.nutrientNameTV.setText(nutrientName);
-        holder.nutrientValTV.setText(Integer.toString(dynamicVal));
+//        holder.nutrientValTV.setText(nutrientVal);
+        holder.nutrientValTV.setText(Double.toString(dynamicVal));
+//        holder.nutrientValTV.setText(Integer.toString(weight));
         holder.nutrientUnitTV.setText(nutrientUnit);
     }
 
