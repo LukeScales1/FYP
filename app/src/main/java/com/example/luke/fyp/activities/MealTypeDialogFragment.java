@@ -89,7 +89,9 @@ public class MealTypeDialogFragment extends BottomSheetDialogFragment {
                 public void onClick(View v) {
                     if (mListener != null) {
                         mListener.onItemClicked(getAdapterPosition());
-                        String mealType = text.toString().substring(0, 1);
+                        int mealType = getAdapterPosition() + 1;
+                        //TODO: implement logic for retrieving bools of dailyview and overwrite or prompt user if meal already exists
+//                        String mealType = text.toString().substring(0, 1);
                         int year = ((DailyViewActivity)getActivity()).getCurrentYear();
                         int month = ((DailyViewActivity)getActivity()).getCurrentMonth();
                         int day = ((DailyViewActivity)getActivity()).getCurrentDay();

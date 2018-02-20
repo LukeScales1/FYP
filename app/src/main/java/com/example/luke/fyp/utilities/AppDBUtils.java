@@ -35,7 +35,7 @@ public class AppDBUtils {
 
 
 
-    public static Meal ingredientsToMeal(List<Ingredient> mealIngredients, String mealType, Date mealTime, long mealId) {
+    public static Meal ingredientsToMeal(List<Ingredient> mealIngredients, int mealType, Date mealTime, long mealId) {
 
         Double totalCalories = 0.0;
         Double totalCarbs = 0.0;
@@ -94,7 +94,7 @@ public class AppDBUtils {
         return ingredient;
     }
 
-    public static Meal makeMeal(final long id, final String mealType, final Date mealTime, final Double calories,
+    public static Meal makeMeal(final long id, final int mealType, final Date mealTime, final Double calories,
                                 final Double fat, final Double sats, final Double carbs, final Double sugars, final Double protein, final Double sodium) {
 
         Meal meal = new Meal();

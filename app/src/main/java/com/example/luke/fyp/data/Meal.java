@@ -13,12 +13,12 @@ import java.util.Date;
  */
 @Entity
 @TypeConverters(DateConverter.class)
-public class Meal {
+public class Meal implements Comparable<Meal>{
     @PrimaryKey(autoGenerate = true)
     public long id;
 
-//    i.e. breakfast (B), lunch (L), dinner (D), snack (S).
-    public String mealType;
+//    i.e. breakfast (1), lunch (2), dinner (3), snack (4).
+    public int mealType;
 
     public Date mealTime;
 
@@ -30,4 +30,7 @@ public class Meal {
     public Double totalProtein;
     public Double totalSodium;
 
+    public int compareTo(Meal m) {
+        return this.mealType - m.mealType;
+    }
 }

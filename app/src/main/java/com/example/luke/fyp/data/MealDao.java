@@ -26,6 +26,12 @@ public interface MealDao {
     @Query("SELECT * FROM Meal")
     List<MealWithIngredients> loadMealsWithIngredients();
 
+    @TypeConverters(DateConverter.class)
+    @Query("SELECT * From Meal " +
+            "WHERE Meal.mealTime > :dayStart " +
+            "AND Meal.mealTime < :dayEnd")
+    List<Meal> findAllMealsByDay(Date dayStart, Date dayEnd);
+
 
 //    @TypeConverters(DateConverter.class)
     @Transaction @Query("SELECT * From Meal " +

@@ -32,8 +32,8 @@ public class DatabaseInitialiser {
         db.ingredientModel().deleteAll();
         db.mealModel().deleteAll();
 
-        Meal currentMeal = makeMeal(Long.parseLong("0"), "B", 0.0,0.0,0.0,0.0,0.0, 0.0,0.0);
-        long currentId = addMeal(db, yesterday, currentMeal);
+        Meal currentMeal = makeMeal(Long.parseLong("0"), 2, 0.0,0.0,0.0,0.0,0.0, 0.0,0.0);
+        long currentId = addMeal(db, today, currentMeal);
 
         Ingredient ingredient1 = addIngredient(db, Long.parseLong("0"), currentId, "apples", 10, "01001", 50.0, 0.0, 0.0, 10.0, 8.0, 0.0, 0.0);
         Ingredient ingredient2 = addIngredient(db, Long.parseLong("0"), currentId, "banana", Integer.parseInt("20"), "01001", Double.parseDouble("80"), Double.parseDouble("3"), Double.parseDouble("0.1"), Double.parseDouble("17"), Double.parseDouble("10"), Double.parseDouble("0"), Double.parseDouble("0"));
@@ -44,23 +44,49 @@ public class DatabaseInitialiser {
         mealIngredients.add(ingredient2);
         mealIngredients.add(ingredient3);
 
-        Meal meal = ingredientsToMeal(mealIngredients, "B", currentId);
-        addMeal(db, yesterday, meal);
+        Meal meal = ingredientsToMeal(mealIngredients, currentMeal.mealType, currentId);
+        addMeal(db, today, meal);
 
-        currentMeal = makeMeal(Long.parseLong("0"), "B", 0.0,0.0,0.0,0.0,0.0, 0.0,0.0);
+//        currentMeal = makeMeal(Long.parseLong("0"), 3, 0.0,0.0,0.0,0.0,0.0, 0.0,0.0);
+//        currentId = addMeal(db, today, currentMeal);
+//
+//        Ingredient ingredient5 = addIngredient(db, Long.parseLong("0"), currentId, "beef", Integer.parseInt("50"), "01001", 120.0, 12.0, 5.0, 12.0, 0.0, 26.0, 10.0);
+//        Ingredient ingredient4 = addIngredient(db, Long.parseLong("0"), currentId, "cheese", 15, "01001", 100.0, 9.5, 4.0, 0.5, 0.5, 5.0, 5.0);
+//
+//        mealIngredients.clear();
+//
+//        mealIngredients.add(ingredient5);
+//        mealIngredients.add(ingredient4);
+//
+//        meal = ingredientsToMeal(mealIngredients, currentMeal.mealType, currentId);
+//        addMeal(db, today, meal);
+
+
+        currentMeal = makeMeal(Long.parseLong("0"), 4, 0.0,0.0,0.0,0.0,0.0, 0.0,0.0);
         currentId = addMeal(db, today, currentMeal);
 
-        Ingredient ingredient5 = addIngredient(db, Long.parseLong("0"), currentId, "beef", Integer.parseInt("50"), "01001", 120.0, 12.0, 5.0, 12.0, 0.0, 26.0, 10.0);
-        Ingredient ingredient4 = addIngredient(db, Long.parseLong("0"), currentId, "cheese", 15, "01001", 100.0, 9.5, 4.0, 0.5, 0.5, 5.0, 5.0);
+        Ingredient ingredient6 = addIngredient(db, Long.parseLong("0"), currentId, "ham", Integer.parseInt("100"), "01001", 190.0, 40.0, 12.0, 12.0, 0.0, 32.0, 10.0);
+        Ingredient ingredient7 = addIngredient(db, Long.parseLong("0"), currentId, "cabbage", 100, "01001", 80.0, 1.5, 0.0, 80.5, 0.5, 5.0, 5.0);
 
         mealIngredients.clear();
 
-        mealIngredients.add(ingredient5);
-        mealIngredients.add(ingredient4);
+        mealIngredients.add(ingredient6);
+        mealIngredients.add(ingredient7);
 
-        meal = ingredientsToMeal(mealIngredients, "B", currentId);
+        meal = ingredientsToMeal(mealIngredients, currentMeal.mealType, currentId);
         addMeal(db, today, meal);
 
+        currentMeal = makeMeal(Long.parseLong("0"), 1, 0.0,0.0,0.0,0.0,0.0, 0.0,0.0);
+        currentId = addMeal(db, today, currentMeal);
+
+        Ingredient ingredient8 = addIngredient(db, Long.parseLong("0"), currentId, "chocolate", Integer.parseInt("50"), "01001", 120.0, 12.0, 5.0, 12.0, 0.0, 26.0, 10.0);
+
+        mealIngredients.clear();
+
+        mealIngredients.add(ingredient8);
+
+        meal = ingredientsToMeal(mealIngredients, currentMeal.mealType, currentId);
+        addMeal(db, today, meal);
 
 //        List<Ingredient> mealIngredients1 = new ArrayList<>();
 //        mealIngredients.add(ingredient3);
@@ -89,7 +115,7 @@ public class DatabaseInitialiser {
 
     }
 
-    private static Meal ingredientsToMeal(List<Ingredient> mealIngredients, String mealType, long mealId) {
+    private static Meal ingredientsToMeal(List<Ingredient> mealIngredients, int mealType, long mealId) {
 
         Double totalCalories = 0.0;
         Double totalCarbs = 0.0;
@@ -141,7 +167,7 @@ public class DatabaseInitialiser {
     return ingredient;
     }
 
-    private static Meal makeMeal(final long id, final String mealType, final Double calories,
+    private static Meal makeMeal(final long id, final int mealType, final Double calories,
                                  final Double fat, final Double sats, final Double carbs, final Double sugars, final Double protein, final Double sodium) {
 
         Meal meal = new Meal();

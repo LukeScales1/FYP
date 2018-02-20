@@ -8,6 +8,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.luke.fyp.R;
 import com.example.luke.fyp.data.AppDatabase;
@@ -36,7 +37,8 @@ public class MealBuilderActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         Intent myIntent = getIntent();
-        String mealType = myIntent.getStringExtra(MealTypeDialogFragment.EXTRA_MEAL_TYPE);
+        int mealType = myIntent.getIntExtra(MealTypeDialogFragment.EXTRA_MEAL_TYPE, 1);
+        Toast.makeText(MealBuilderActivity.this, "Meal Type = " + mealType, Toast.LENGTH_SHORT).show();
         Calendar c = Calendar.getInstance();
         int year = myIntent.getIntExtra(MealTypeDialogFragment.EXTRA_MEAL_YEAR, c.get(Calendar.YEAR));
         int month = myIntent.getIntExtra(MealTypeDialogFragment.EXTRA_MEAL_MONTH, c.get(Calendar.MONTH));
@@ -46,7 +48,8 @@ public class MealBuilderActivity extends AppCompatActivity {
         Date mealTime = makeTimestamp(year, month, day);
 
         currentMeal = makeMeal(Long.parseLong("0"), mealType, mealTime, 0.0,0.0,0.0,0.0,0.0, 0.0,0.0);
-        new MealCreateTask().execute(currentMeal);
+//        new MealCreateTask().execute(currentMeal);
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {

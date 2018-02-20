@@ -31,6 +31,8 @@
     <string name="name_sodium">Sodium</string>
     <string name="name_saturated_fat">Saturated Fat</string>
 
+    <string name="test">100</string>
+
     <!--alternative cases - for potential future use-->
     <string name="case_water">Water</string>
     <string name="case_calcium">Calcium, Ca</string>

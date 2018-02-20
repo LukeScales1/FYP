@@ -42,10 +42,18 @@
         <!--android:id="@id/rv_meal_items">-->
     <!--</android.support.v7.widget.RecyclerView>-->
 
-    <TextView
-        android:id="@+id/tv_testicle"
-        android:layout_width="match_parent"
+    <ListView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/tv_day_title" />
+        android:id="@+id/meal_list"
+        app:layout_constraintTop_toBottomOf="@id/tv_day_title"
+        android:padding="4dp">
+    </ListView>
+
+    <!--<TextView-->
+        <!--android:id="@+id/tv_testicle"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--app:layout_constraintTop_toBottomOf="@id/tv_day_title" />-->
 
 </android.support.constraint.ConstraintLayout>
