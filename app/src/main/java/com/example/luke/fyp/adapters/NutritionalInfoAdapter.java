@@ -9,6 +9,8 @@ import android.widget.TextView;
 import com.example.luke.fyp.Nutrient;
 import com.example.luke.fyp.R;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 /**
@@ -49,7 +51,9 @@ public class NutritionalInfoAdapter extends RecyclerView.Adapter<NutritionalInfo
 
         holder.nutrientNameTV.setText(nutrientName);
 //        holder.nutrientValTV.setText(nutrientVal);
-        holder.nutrientValTV.setText(Double.toString(dynamicVal));
+        double testvar = new BigDecimal(dynamicVal).setScale(1, RoundingMode.HALF_UP).doubleValue();
+       String val =  Double.toString(testvar);
+        holder.nutrientValTV.setText(val);
 //        holder.nutrientValTV.setText(Integer.toString(weight));
         holder.nutrientUnitTV.setText(nutrientUnit);
     }
@@ -59,15 +63,15 @@ public class NutritionalInfoAdapter extends RecyclerView.Adapter<NutritionalInfo
         return nutrientList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView nutrientNameTV;
-        public TextView nutrientValTV;
-        public TextView nutrientUnitTV;
-        public ViewHolder(View itemView) {
+    class ViewHolder extends RecyclerView.ViewHolder {
+        TextView nutrientNameTV;
+        TextView nutrientValTV;
+        TextView nutrientUnitTV;
+        ViewHolder(View itemView) {
             super(itemView);
-            nutrientNameTV = (TextView) itemView.findViewById(R.id.tv_nutrient_name);
-            nutrientValTV = (TextView) itemView.findViewById(R.id.tv_nutrient_value);
-            nutrientUnitTV = (TextView) itemView.findViewById(R.id.tv_nutrient_unit);
+            nutrientNameTV = itemView.findViewById(R.id.tv_nutrient_name);
+            nutrientValTV = itemView.findViewById(R.id.tv_nutrient_value);
+            nutrientUnitTV = itemView.findViewById(R.id.tv_nutrient_unit);
         }
     }
 }

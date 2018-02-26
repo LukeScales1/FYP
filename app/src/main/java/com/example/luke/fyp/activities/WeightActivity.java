@@ -7,12 +7,16 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.luke.fyp.Nutrient;
 import com.example.luke.fyp.R;
 import com.example.luke.fyp.adapters.NutritionalInfoAdapter;
+import com.example.luke.fyp.data.AppDatabase;
+import com.example.luke.fyp.data.Ingredient;
 import com.example.luke.fyp.utilities.UsfdaJsonUtils;
 
 import org.json.JSONException;
@@ -20,6 +24,12 @@ import org.json.JSONException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static com.example.luke.fyp.activities.MealBuilderActivity.EXTRA_INGREDIENT_ID;
+import static com.example.luke.fyp.activities.MealBuilderActivity.EXTRA_WEIGHT_CASE;
+import static com.example.luke.fyp.activities.MealTypeDialogFragment.EXTRA_MEAL_ID;
+import static com.example.luke.fyp.utilities.AppDBUtils.addIngredient;
+import static com.example.luke.fyp.utilities.AppDBUtils.makeIngredient;
 
 public class WeightActivity extends AppCompatActivity {
 
@@ -33,123 +43,147 @@ public class WeightActivity extends AppCompatActivity {
     TextView weightTitle;
     EditText weightIn;
 
-//    TextView testText;
-//    TextView test1Text;
-//    TextView test2Text;
-
-//    String Calories;
+    //    String Calories;
 //    String Protein;
 //    String Fat;
 //    String Sats;
 //    String Carbs;
 //    String Sugar;
 //    String Sodium;
-//    Integer CalVal;
-//    Integer ProVal;
-//    Integer FatVal;
-//    Integer FibVal;
-//    Integer SatVal;
-//    Integer CarbVal;
-//    Integer SugVal;
-//    Integer SodVal;
-//    String CalUnit;
-//    String ProUnit;
-//    String FatUnit;
-//    String FibUnit;
-//    String SatUnit;
-//    String CarbUnit;
-//    String SugUnit;
-//    String SodUnit;
+    Double CalVal;
+    Double ProVal;
+    Double FatVal;
+//    Double FibVal;
+    Double SatVal;
+    Double CarbVal;
+    Double SugVal;
+    Double SodVal;
+
+
+    long mealId;
+    long ingredientId;
+    String itemName;
+
+    private AppDatabase mDb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weight);
-        final RecyclerView itemList = (RecyclerView) findViewById(R.id.rv_nutrient_items);
+        final RecyclerView itemList = findViewById(R.id.rv_nutrient_items);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         itemList.setLayoutManager(layoutManager);
 
-        nameTitle = (TextView) findViewById(R.id.tv_title);
-        nameIn = (TextView) findViewById(R.id.tv_item_name);
-        weightTitle= (TextView) findViewById(R.id.tv_weight);
+//        nameTitle = (TextView) findViewById(R.id.tv_title);
+        nameIn = findViewById(R.id.tv_item_name);
+        weightTitle= findViewById(R.id.tv_weight);
 
-        weightIn = (EditText) findViewById(R.id.et_weight);
+        weightIn = findViewById(R.id.et_weight);
+
+        mDb = AppDatabase.getInMemoryDatabase(getApplicationContext());
 
 
-//        testText = (TextView) findViewById(R.id.tv_test);
-//        test1Text = (TextView) findViewById(R.id.tv_test1);
-//        test2Text = (TextView) findViewById(R.id.tv_test2);
+        Button confirmBtn = findViewById(R.id.btn_confirm);
+        confirmBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
-//        Calories = getString(R.string.name_energy);
-//        Protein = getString(R.string.name_protein);
-//        Fat = getString(R.string.name_fat);
-//        Sats = getString(R.string.name_saturated_fat);
-//        Carbs = getString(R.string.name_carbs);
-//        Sugar = getString(R.string.name_sugar);
-//        Sodium = getString(R.string.name_sodium);
+                for(int i = 0; i < nutrientList.size(); i++){
+                    Nutrient nutrient = nutrientList.get(i);
+                    String nutrientName = nutrient.getName();
+                    String nutrientValue = nutrient.getValue();
+                    checkNutrient(nutrientName, nutrientValue);
+                }
+
+                //TODO: pass ndbno and save, or store all 26 nutrients in Database
+                Ingredient ingredient1 = makeIngredient(ingredientId, mealId, itemName, weight, "01001", CalVal, FatVal, SatVal, CarbVal, SugVal, ProVal, SodVal);
+                addIngredient(mDb, ingredient1);
+                Intent intent = new Intent(WeightActivity.this, MealBuilderActivity.class);
+                intent.putExtra(EXTRA_MEAL_ID, mealId);
+                startActivity(intent);
+            }
+        });
 
         Intent myIntent = getIntent();
-        String nutrientJson = myIntent.getStringExtra("Nutrients");
-        String itemName = myIntent.getStringExtra("Name");
-        nameIn.setText(itemName);
-
-        String CalorieCheck = getString(R.string.case_energy);
-        String ProteinCheck = getString(R.string.case_protein);
-        String FatCheck = getString(R.string.case_fat);
-        String FibreCheck = getString(R.string.case_fiber);
-        String CarbCheck = getString(R.string.case_carbs);
-        String SugarCheck = getString(R.string.case_sugar);
-        String SodiumCheck = getString(R.string.case_sodium);
-        String SatsCheck = getString(R.string.case_saturated_fat);
-
-        Nutrient[] nutrientInfo = new Nutrient[0];
-        try{
-            nutrientInfo = UsfdaJsonUtils.getNutrientDataFromJson(nutrientJson);
-        } catch (JSONException e) {
-            e.printStackTrace();
+        int weightCase = myIntent.getIntExtra(EXTRA_WEIGHT_CASE,0);
+        ingredientId = myIntent.getLongExtra(EXTRA_INGREDIENT_ID, 0);
+        mealId = myIntent.getLongExtra(EXTRA_MEAL_ID,0);
+        if (mealId == 0) {
+            throw new NullPointerException("mealId cannot be zero; ingredient must be assigned to a meal");
+        } else if(ingredientId == 0){
+            throw new NullPointerException("ingredientId cannot be zero; ingredient must be created before this stage");
         }
+            if(weightCase == 0){
+                Ingredient ingredient = mDb.ingredientModel().loadIngredientById(ingredientId);
+                weightIn.setText(ingredient.weight.toString());
+                Nutrient[] nutrients = new Nutrient[0];
+                //TODO: implement case of editing existing ingredient
+            } else {
+                String nutrientJson = myIntent.getStringExtra(SearchResultsActivity.EXTRA_NUTRITION_DATA);
+                itemName = myIntent.getStringExtra(SearchResultsActivity.EXTRA_FOOD_NAME);
 
-        for (int i = 0; i < nutrientInfo.length; i++) {
+                nameIn.setText(itemName);
 
-            String Name = nutrientInfo[i].getName();
+                String CalorieCheck = getString(R.string.case_energy);
+                String ProteinCheck = getString(R.string.case_protein);
+                String FatCheck = getString(R.string.case_fat);
+                String FibreCheck = getString(R.string.case_fiber);
+                String CarbCheck = getString(R.string.case_carbs);
+                String SugarCheck = getString(R.string.case_sugar);
+                String SodiumCheck = getString(R.string.case_sodium);
+                String SatsCheck = getString(R.string.case_saturated_fat);
+
+                Nutrient[] nutrientInfo = new Nutrient[0];
+                try {
+                    nutrientInfo = UsfdaJsonUtils.getNutrientDataFromJson(nutrientJson);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                for (Nutrient aNutrientInfo : nutrientInfo) {
+
+                    String Name = aNutrientInfo.getName();
 //            String Value = nutrientInfo[i].getValue();
 //            String Unit = nutrientInfo[i].getUnit();
 
-            if (Name.equals(CalorieCheck)) {
-                nutrientInfo[i].setName(getString(R.string.name_energy));
-            }
-            if (Name.equals(ProteinCheck)) {
-                nutrientInfo[i].setName(getString(R.string.name_protein));
-            }
-            if (Name.equals(FatCheck)) {
-                nutrientInfo[i].setName(getString(R.string.name_fat));
-            }
-            if (Name.equals(FibreCheck)) {
-                nutrientInfo[i].setName(getString(R.string.name_fiber));
-            }
-            if (Name.equals(CarbCheck)) {
-                nutrientInfo[i].setName(getString(R.string.name_carbs));
-            }
-            if (Name.equals(SugarCheck)) {
-                nutrientInfo[i].setName(getString(R.string.name_sugar));
-            }
-            if (Name.equals(SodiumCheck)) {
-                nutrientInfo[i].setName(getString(R.string.name_sodium));
-            }
-            if (Name.equals(SatsCheck)) {
-                nutrientInfo[i].setName(getString(R.string.name_saturated_fat));
-            }
-        }
+                    if (Name.equals(CalorieCheck)) {
+                        aNutrientInfo.setName(getString(R.string.name_energy));
+                    }
+                    if (Name.equals(ProteinCheck)) {
+                        aNutrientInfo.setName(getString(R.string.name_protein));
+                    }
+                    if (Name.equals(FatCheck)) {
+                        aNutrientInfo.setName(getString(R.string.name_fat));
+                    }
+                    if (Name.equals(FibreCheck)) {
+                        aNutrientInfo.setName(getString(R.string.name_fiber));
+                    }
+                    if (Name.equals(CarbCheck)) {
+                        aNutrientInfo.setName(getString(R.string.name_carbs));
+                    }
+                    if (Name.equals(SugarCheck)) {
+                        aNutrientInfo.setName(getString(R.string.name_sugar));
+                    }
+                    if (Name.equals(SodiumCheck)) {
+                        aNutrientInfo.setName(getString(R.string.name_sodium));
+                    }
+                    if (Name.equals(SatsCheck)) {
+                        aNutrientInfo.setName(getString(R.string.name_saturated_fat));
+                    }
+                }
 
-        nutrientList.addAll(Arrays.asList(nutrientInfo));
-        Nutrient water = nutrientList.get(0);
-        nutrientList.remove(0);
-        nutrientList.add(water);
+                nutrientList.addAll(Arrays.asList(nutrientInfo));
+                Nutrient water = nutrientList.get(0);
+                nutrientList.remove(0);
+                nutrientList.add(water);
+            }
 
         weight = Double.valueOf(weightIn.getText().toString());
 
         infoAdapter = new NutritionalInfoAdapter(nutrientList, weight);
         itemList.setAdapter(infoAdapter);
+
+
 
         weightIn.addTextChangedListener(new TextWatcher() {
             @Override
@@ -235,5 +269,33 @@ public class WeightActivity extends AppCompatActivity {
 
 
 //
+    }
+
+    public  void checkNutrient(String name, String val){
+
+        if (name.equals(getString(R.string.name_energy))) {
+            CalVal = Double.parseDouble(val);
+        }
+        if (name.equals(getString(R.string.name_protein))) {
+            ProVal = Double.parseDouble(val);
+        }
+        if (name.equals(getString(R.string.name_fat))) {
+            FatVal = Double.parseDouble(val);
+        }
+//        if (name.equals(FibreCheck)) {
+//            nutrientInfo[i].setName(getString(R.string.name_fiber));
+//        }
+        if (name.equals(getString(R.string.name_carbs))) {
+            CarbVal = Double.parseDouble(val);
+        }
+        if (name.equals(getString(R.string.name_sugar))) {
+            SugVal = Double.parseDouble(val);
+        }
+        if (name.equals(getString(R.string.name_sodium))) {
+            SodVal = Double.parseDouble(val);
+        }
+        if (name.equals(getString(R.string.name_saturated_fat))) {
+            SatVal = Double.parseDouble(val);
+        }
     }
 }

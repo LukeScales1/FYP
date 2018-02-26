@@ -1,15 +1,14 @@
 package com.example.luke.fyp.data;
 
-import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
+import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.TypeConverters;
 import android.arch.persistence.room.Update;
 
 import java.util.List;
 
-import static android.arch.persistence.room.OnConflictStrategy.IGNORE;
 import static android.arch.persistence.room.OnConflictStrategy.REPLACE;
 
 /**
@@ -23,21 +22,24 @@ import static android.arch.persistence.room.OnConflictStrategy.REPLACE;
 public interface IngredientDao {
 
     @Query("select * from Ingredient where id = :id")
-    Ingredient loadIngredientById(int id);
+    Ingredient loadIngredientById(long id);
 
     @Query("SELECT * FROM Ingredient WHERE Ingredient.meal_id LIKE :mealId")
-    LiveData<List<Ingredient>> findIngredientsOfMeal(long mealId);
-
+    List<Ingredient> findIngredientsOfMeal(long mealId);
+//    LiveData<
 
     @Query("SELECT * FROM Ingredient")
-    LiveData<List<Ingredient>> findAllIngredients();
-
+    List<Ingredient> findAllIngredients();
+//    LiveData<
 
     @Query("SELECT * FROM Ingredient")
     List<Ingredient> findAllIngredientsSync();
 
-    @Insert(onConflict = IGNORE)
-    void insertIngredient(Ingredient ingredient);
+//    @Insert(onConflict = IGNORE)
+//    void insertIngredient(Ingredient ingredient);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    long insertIngredient(Ingredient ingredient);
 
     @Update(onConflict = REPLACE)
     void updateIngredient(Ingredient ingredient);

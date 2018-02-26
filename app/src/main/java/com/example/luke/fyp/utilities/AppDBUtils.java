@@ -22,8 +22,7 @@ public class AppDBUtils {
 
     public static List<Ingredient> fetchIngredientsOfMeal(Date start, Date end) {
 
-        List<Ingredient> mealIngredients = mDb.mealModel().findMealIngredientsByDayandType("B", start, end);
-        return mealIngredients;
+        return mDb.mealModel().findMealIngredientsByDayandType("B", start, end);
 //        if (mealIngredients.size() > 0) {
 //            for (Ingredient mealIngredient : mealIngredients) {
 //                testTV.append("ID: " + mealIngredient.id + "\nMeal ID:" + mealIngredient.meal_id + "\nWeight:" + mealIngredient.weight + "g\nTotal Calories: " + mealIngredient.calories.toString() + "\n\n");
@@ -34,8 +33,7 @@ public class AppDBUtils {
     }
 
 
-
-    public static Meal ingredientsToMeal(List<Ingredient> mealIngredients, int mealType, Date mealTime, long mealId) {
+    static Meal ingredientsToMeal(List<Ingredient> mealIngredients, long mealId, int mealType, Date mealTime) {
 
         Double totalCalories = 0.0;
         Double totalCarbs = 0.0;
@@ -47,16 +45,16 @@ public class AppDBUtils {
 
         for (int i = 0; i < mealIngredients.size(); i++) {
             Ingredient ingredient = mealIngredients.get(i);
-            totalCalories = totalCalories + ingredient.calories;
-            totalCarbs = totalCarbs + ingredient.carbs;
-            totalSugars = totalSugars + ingredient.sugar;
-            totalFat = totalFat + ingredient.fat;
-            totalSats = totalSats + ingredient.saturates;
-            totalProtein = totalProtein + ingredient.protein;
-            totalSodium = totalSodium + ingredient.sodium;
+            Double ingMultiplier = ingredient.weight/100.0;
+            totalCalories = totalCalories + (ingredient.calories * ingMultiplier);
+            totalCarbs = totalCarbs + (ingredient.carbs * ingMultiplier);
+            totalSugars = totalSugars + (ingredient.sugar * ingMultiplier);
+            totalFat = totalFat + (ingredient.fat * ingMultiplier);
+            totalSats = totalSats + (ingredient.saturates * ingMultiplier);
+            totalProtein = totalProtein + (ingredient.protein * ingMultiplier);
+            totalSodium = totalSodium + (ingredient.sodium * ingMultiplier);
         }
-        Meal meal = makeMeal(mealId, mealType, mealTime, totalCalories, totalFat, totalSats, totalCarbs, totalSugars, totalProtein, totalSodium);
-        return meal;
+        return makeMeal(mealId, mealType, mealTime, totalCalories, totalFat, totalSats, totalCarbs, totalSugars, totalProtein, totalSodium);
     }
 
     public static Date makeTimestamp(int year, int month, int day) {
@@ -74,9 +72,13 @@ public class AppDBUtils {
         return calendar.getTime();
     }
 
-    public static Ingredient addIngredient(final AppDatabase db, final long id, final long mealId, final String name, final int weight, final String ndbno, final Double calories,
-                                            final Double fat, final Double sats, final Double carbs, final Double sugars, final Double protein, final Double sodium) {
-
+    public static long makeBlankIngredient(AppDatabase db){
+        Ingredient ingredient = makeIngredient(0,0,null,null,null,null,null,null,null,null,null,null);
+        return addIngredient(db, ingredient);
+    }
+//
+    public static Ingredient makeIngredient(final long id, final long mealId, final String name, final Double weight, final String ndbno, final Double calories,
+                                            final Double fat, final Double sats, final Double carbs, final Double sugars, final Double protein, final Double sodium){
         Ingredient ingredient = new Ingredient();
         ingredient.id = id;
         ingredient.meal_id = mealId;
@@ -90,17 +92,31 @@ public class AppDBUtils {
         ingredient.sugar = sugars;
         ingredient.protein = protein;
         ingredient.sodium = sodium;
-        db.ingredientModel().insertIngredient(ingredient);
         return ingredient;
     }
 
-    public static Meal makeMeal(final long id, final int mealType, final Date mealTime, final Double calories,
-                                final Double fat, final Double sats, final Double carbs, final Double sugars, final Double protein, final Double sodium) {
+    public static Long addIngredient(final AppDatabase db, final Ingredient ingredient) {
+
+        return db.ingredientModel().insertIngredient(ingredient);
+    }
+
+
+    public static Long makeBlankMeal(AppDatabase db, int mealType, Date mealTime) {
+
+        Meal meal = makeMeal(0, mealType, mealTime,null,null,null,null,null,null, null);
+        return addMeal(db, meal);
+    }
+
+    private static Meal makeMeal(final long id, final int mealType, Date mealTime, final Double calories,
+                                 final Double fat, final Double sats, final Double carbs, final Double sugars, final Double protein, final Double sodium) {
+
+        String mealTitle = getTitleFromInt(mealType);
 
         Meal meal = new Meal();
         meal.id = id;
         meal.mealType = mealType;
         meal.mealTime = mealTime;
+        meal.mealTitle = mealTitle;
         meal.totalCalories = calories;
         meal.totalFat = fat;
         meal.totalSats = sats;
@@ -111,10 +127,32 @@ public class AppDBUtils {
         return meal;
     }
 
-    public static Long addMeal(final AppDatabase db, final Meal meal){
+    static Long addMeal(final AppDatabase db, final Meal meal){
 
-        long newId = db.mealModel().insertMeal(meal);
-        return newId;
+        return db.mealModel().insertMeal(meal);
     }
+
+//    public static Long addMeal(final AppDatabase db,  Date mealTime, final Meal meal){
+//
+//        meal.mealTime = mealTime;
+//        long newId = db.mealModel().insertMeal(meal);
+//        return newId;
+//    }
+
+
+    private static String getTitleFromInt(int mealType) {
+        String mealTitle = "";
+        if(mealType == 1){
+            mealTitle = "Breakfast";
+        } else if(mealType == 2){
+            mealTitle = "Lunch";
+        } else if(mealType == 3){
+            mealTitle = "Dinner";
+        } else if(mealType == 4){
+            mealTitle = "Snacks";
+        }
+        return mealTitle;
+    }
+
 
 }

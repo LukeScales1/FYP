@@ -12,18 +12,24 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <!-- TODO: add parent activity hierarchy to actvities -->
-        <activity android:name=".activities.MainActivity" />
+        <activity android:name=".activities.MainActivity">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+        </activity>
         <activity android:name=".activities.SearchResultsActivity" />
         <activity android:name=".activities.WeightActivity" />
         <activity
             android:name=".activities.DailyViewActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
         </activity>
         <activity
             android:name=".activities.MealBuilderActivity"

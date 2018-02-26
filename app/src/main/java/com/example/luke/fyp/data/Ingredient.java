@@ -18,7 +18,8 @@ public class Ingredient {
 
     public String name;
 
-    public int weight;
+
+    public Double weight;
 
     public String ndbno;
 
@@ -29,4 +30,8 @@ public class Ingredient {
     public Double sugar;
     public Double protein;
     public Double sodium;
+
+//    public Double calcium;
+//    public Double iron;
+//    public Doubl
 }

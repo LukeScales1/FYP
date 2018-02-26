@@ -5,13 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/activity_weight"
-    android:background="@android:color/darker_gray">
+    android:background="@android:color/darker_gray"
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:id="@+id/aw_linear">
+        android:id="@+id/aw_linear"
+        >
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -48,8 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:id="@+id/aw_linear2"
-            android:orientation="vertical"
-            android:layout_toRightOf="@+id/aw_linear1">
+            android:orientation="vertical">
 
         <TextView
             android:layout_width="wrap_content"
@@ -71,6 +72,14 @@
         </LinearLayout>
     </LinearLayout>
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/confirm_weight_btn"
+        android:layout_below="@id/aw_linear"
+        android:id="@+id/btn_confirm"
+        android:layout_marginStart="45dp"/>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -78,7 +87,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginRight="10dp"
         android:id="@+id/tv_nutrient_title"
-        android:layout_below="@+id/aw_linear"
+        android:layout_below="@+id/btn_confirm"
         android:text="@string/nutrients_title"
         android:textSize="20sp"
         android:textColor="@android:color/white"/>

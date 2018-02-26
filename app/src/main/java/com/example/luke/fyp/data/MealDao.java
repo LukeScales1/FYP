@@ -34,10 +34,24 @@ public interface MealDao {
 
 
 //    @TypeConverters(DateConverter.class)
+//    @Transaction @Query("SELECT * From Meal " +
+//            "INNER JOIN Ingredient ON Meal.id = Ingredient.meal_id " +
+//            "WHERE Meal.mealType LIKE :mealType ")
+//    List<Ingredient> findAllIngredientsFromMeal(String mealType);
+
     @Transaction @Query("SELECT * From Meal " +
             "INNER JOIN Ingredient ON Meal.id = Ingredient.meal_id " +
-            "WHERE Meal.mealType LIKE :mealType ")
-    List<Ingredient> findAllIngredientsFromMeal(String mealType);
+            "WHERE Meal.id = :mealId ")
+    List<Ingredient> findAllIngredientsFromMeal(long mealId);
+
+    @Query("SELECT Meal.mealType From Meal " +
+            "WHERE Meal.id = :mealId ")
+    int retrieveMealType(long mealId);
+
+    @TypeConverters(DateConverter.class)
+    @Query("SELECT Meal.mealTime From Meal " +
+            "WHERE Meal.id = :mealId ")
+    Date retrieveMealTime(long mealId);
 
     @TypeConverters(DateConverter.class)
     @Query("SELECT * From Meal " +

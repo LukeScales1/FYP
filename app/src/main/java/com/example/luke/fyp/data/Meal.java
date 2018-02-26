@@ -3,6 +3,7 @@ package com.example.luke.fyp.data;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.TypeConverters;
+import android.support.annotation.NonNull;
 
 import java.util.Date;
 
@@ -20,6 +21,8 @@ public class Meal implements Comparable<Meal>{
 //    i.e. breakfast (1), lunch (2), dinner (3), snack (4).
     public int mealType;
 
+    public String mealTitle;
+
     public Date mealTime;
 
     public Double totalCalories;
@@ -30,7 +33,7 @@ public class Meal implements Comparable<Meal>{
     public Double totalProtein;
     public Double totalSodium;
 
-    public int compareTo(Meal m) {
+    public int compareTo(@NonNull Meal m) {
         return this.mealType - m.mealType;
     }
 }

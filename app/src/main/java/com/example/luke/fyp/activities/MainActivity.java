@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -38,16 +37,18 @@ public class MainActivity extends AppCompatActivity
         testTV = findViewById(R.id.tv_test);
         mDb = AppDatabase.getInMemoryDatabase(getApplicationContext());
         populateDb();
-        fetchData();
+        Intent intent = new Intent(MainActivity.this, DailyViewActivity.class);
+        startActivity(intent);
+//        fetchData();
 
-        searchInput = (EditText) findViewById(R.id.et_search);
-        searchBtn = (Button) findViewById(R.id.btn_search);
-
-        searchBtn.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v){
-                searchFoodDatabase();
-            }
-        });
+//        searchInput = (EditText) findViewById(R.id.et_search);
+//        searchBtn = (Button) findViewById(R.id.btn_search);
+//
+//        searchBtn.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v){
+//                searchFoodDatabase();
+//            }
+//        });
     }
 
     private void populateDb() {

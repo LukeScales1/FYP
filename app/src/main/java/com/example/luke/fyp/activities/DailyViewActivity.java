@@ -1,8 +1,10 @@
 package com.example.luke.fyp.activities;
 
 import android.app.DialogFragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -10,10 +12,9 @@ import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.luke.fyp.R;
-import com.example.luke.fyp.adapters.MealInfoAdapter;
+import com.example.luke.fyp.adapters.MealAdapter;
 import com.example.luke.fyp.data.AppDatabase;
 import com.example.luke.fyp.data.Meal;
 import com.example.luke.fyp.utilities.DatabaseInitialiser;
@@ -22,6 +23,8 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+
+import static com.example.luke.fyp.activities.MealTypeDialogFragment.EXTRA_MEAL_ID;
 
 public class DailyViewActivity extends AppCompatActivity implements MealTypeDialogFragment.Listener{
 
@@ -44,21 +47,19 @@ public class DailyViewActivity extends AppCompatActivity implements MealTypeDial
 
     ListView mealList;
 
-    Boolean B = false;
-    Boolean L = false;
-    Boolean D = false;
-    Boolean S = false;
-
-    List<Meal> organisedMeals;
+    static Boolean B = false;
+    static Boolean L = false;
+    static Boolean D = false;
+    static Boolean S = false;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_daily_view);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        mealList = (ListView) findViewById(R.id.meal_list);
+        mealList = findViewById(R.id.meal_list);
 
 
         Calendar calendar = Calendar.getInstance();
@@ -77,20 +78,16 @@ public class DailyViewActivity extends AppCompatActivity implements MealTypeDial
         dayOfWeek = getDayName(weekDay);
         monthName = getMonthName(currentMonth);
 
-        dayTitle = (TextView) findViewById(R.id.tv_day_title);
-        //TODO: remove concatenation
-        dayTitle.setText(dayOfWeek + ", " + currentDay + " " + monthName + " " + currentYear);
+        dayTitle = findViewById(R.id.tv_day_title);
+        String thisString = dayOfWeek + ", " + currentDay + " " + monthName + " " + currentYear;
+        dayTitle.setText(thisString);
 
-//        testTV = (TextView) findViewById(R.id.tv_testicle);
-//        testTV.setText("");
-
-        populateDb();
         fetchData(startDate, endDate);
 
         changeCount = 1;
 
-        previousDayBtn = (ImageButton) findViewById(R.id.left_btn);
-        nextDayBtn = (ImageButton) findViewById(R.id.right_btn);
+        previousDayBtn = findViewById(R.id.left_btn);
+        nextDayBtn = findViewById(R.id.right_btn);
         previousDayBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 changeDay(-1);
@@ -107,7 +104,7 @@ public class DailyViewActivity extends AppCompatActivity implements MealTypeDial
             }
         });
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -180,9 +177,9 @@ public class DailyViewActivity extends AppCompatActivity implements MealTypeDial
         dayOfWeek = getDayName(weekDay);
         monthName = getMonthName(currentMonth);
 
-        dayTitle = (TextView) findViewById(R.id.tv_day_title);
-        //TODO: remove concatenation
-        dayTitle.setText(dayOfWeek + ", " + currentDay + " " + monthName + " " + currentYear);
+        dayTitle = findViewById(R.id.tv_day_title);
+        String thisString = dayOfWeek + ", " + currentDay + " " + monthName + " " + currentYear;
+        dayTitle.setText(thisString);
 
         fetchData(startDate, endDate);
     }
@@ -195,40 +192,54 @@ public class DailyViewActivity extends AppCompatActivity implements MealTypeDial
     public void fetchData(Date start, Date end) {
         // remove from main thread
 
-        List<Meal> meals = mDb.mealModel().findAllMealsByDay(start, end);
+        final List<Meal> meals = mDb.mealModel().findAllMealsByDay(start, end);
         Collections.sort(meals);
         checkMeals(meals);
 
 //        List<Ingredient> mealIngredients = fetchIngredientsOfMeal(start, end);
-        MealInfoAdapter mealInfoAdapter = new MealInfoAdapter(DailyViewActivity.this, meals);
-        mealList.setAdapter(mealInfoAdapter);
+        MealAdapter mealAdapter = new MealAdapter(DailyViewActivity.this, meals);
+        mealList.setAdapter(mealAdapter);
         mealList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(DailyViewActivity.this, "You Clicked at " + i, Toast.LENGTH_SHORT).show();
+                Meal meal = meals.get(i);
+                String mealTitle = meal.mealTitle;
+                Snackbar.make(view, mealTitle + ": would you like to edit this meal?", Snackbar.LENGTH_LONG)
+                        .setAction("Edit", new MyEditMealListener(meal.id, meal.mealType)).show();
             }
         });
-//        if (meals.size() > 0) {
-//            for (Meal meal : meals) {
-//                testTV.append("ID: " + meal.id + "\nMeal Type:" + meal.mealType + "\nTotal Calories:" + meal.totalCalories.toString() +
-//                        "\nTotal Fat: " + meal.totalFat.toString() + "\nTotal Sats: " + meal.totalSats.toString() + "\nTotal Protein: "
-//                        + meal.totalProtein.toString() + "\nTotal Carbs: " + meal.totalCarbs.toString() + "\nTotal Sugars :" + meal.totalSugars.toString() + "\n\n");
-//
+//        mealList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+//            @Override
+//            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+//                Meal meal = meals.get(i);
 //            }
-//        } else {
-//            testTV.setText(getString(R.string.daily_view_no_meals));
-//        }
-//        testTV.setText("this");
-//        List<Ingredient> mealIngredients = mDb.mealModel().findMealIngredientsByDayandType("B",start, end);
-////        List<Ingredient> mealIngredients = fetchIngredientsOfMeal(start, end);
-//        if (mealIngredients.size() > 0) {
-//            for (Ingredient mealIngredient : mealIngredients) {
-//                testTV.append("ID: " + mealIngredient.id + "\nMeal ID:" + mealIngredient.meal_id + "\nWeight:" + mealIngredient.weight + "g\nTotal Calories: " + mealIngredient.calories.toString() + "\n\n");
-//
-//            }
-//        } else {
-//            testTV.setText(getString(R.string.daily_view_no_meals));
-//        }
+//        });
+    }
+
+    public class MyEditMealListener implements View.OnClickListener{
+
+        long id;
+        int type;
+
+        MyEditMealListener(long mealId, int mealType) {
+            this.id = mealId;
+            this.type = mealType;
+        }
+
+        @Override
+        public void onClick(View v) {
+            int year = getCurrentYear();
+            int month = getCurrentMonth();
+            int day = getCurrentDay();
+            Intent intent = new Intent(DailyViewActivity.this, MealBuilderActivity.class);
+            intent.putExtra(EXTRA_MEAL_ID, id);
+//            intent.putExtra(EXTRA_MEAL_TYPE, type);
+//            intent.putExtra(EXTRA_MEAL_YEAR, year);
+//            intent.putExtra(EXTRA_MEAL_MONTH, month);
+//            intent.putExtra(EXTRA_MEAL_DAY, day);
+            startActivity(intent);
+
+        }
     }
 
     private void checkMeals(List<Meal> meals) {
@@ -245,23 +256,19 @@ public class DailyViewActivity extends AppCompatActivity implements MealTypeDial
             }
         }
     }
-//        if(!B){
-//            Meal blankMeal = makeMeal(0,"B",startDate,0.0,0.0,0.0,0.0,0.0,0.0,0.0);
-//            organisedMeals.add(0, blankMeal);
-//        }
-//        if(!L){
-//            Meal blankMeal = makeMeal(0,"L",startDate,0.0,0.0,0.0,0.0,0.0,0.0,0.0);
-//            organisedMeals.add(1, blankMeal);
-//        }
-//        if(!D){
-//            Meal blankMeal = makeMeal(0,"D",startDate,0.0,0.0,0.0,0.0,0.0,0.0,0.0);
-//            organisedMeals.add(2, blankMeal);
-//        }
-//        if(!S){
-//            Meal blankMeal = makeMeal(0,"S",startDate,0.0,0.0,0.0,0.0,0.0,0.0,0.0);
-//            organisedMeals.add(3, blankMeal);
-//        }
-//    }
+
+    public static Boolean checkB(){
+        return B;
+    }
+    public static Boolean checkL(){
+        return L;
+    }
+    public static Boolean checkD(){
+        return D;
+    }
+    public static Boolean checkS(){
+        return S;
+    }
 
     //Use only for setting search period for returning database values i.e. start & end of day to query for data
     public Date setDateLimits(Calendar calendar, int dayOffset) {

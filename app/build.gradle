@@ -19,7 +19,7 @@ android {
     buildToolsVersion '26.0.2'
     defaultConfig {
         applicationId "com.example.luke.fyp"
-        minSdkVersion 24
+        minSdkVersion 23
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"

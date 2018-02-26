@@ -9,6 +9,7 @@
     <string name="title_name">Nutrient</string>
     <string name="title_value">Value</string>
     <string name="title_unit">Unit</string>
+    <string name="confirm_weight_btn">Confirm Weight/Save Ingredient</string>
 
 
     <!--main cases-->
@@ -76,8 +77,19 @@
     <string name="meal_prompt">What type of meal would you like to add?</string>
 
     <!--MealBuilderActivity strings -->
+    <string name="tv_add_ingredient">Use the field below to add ingredients to your meal:</string>
     <string name="ingredient_search_prompt">Search for an ingredient here</string>
     <string name="title_activity_meal_builder">MealBuilderActivity</string>
+    <string name="name_sats">Sats</string>
+    <string name="name_carb">Carbs</string>
+    <string name="name_prot">Prot.</string>
+    <string name="name_sod">Na</string>
+
+
+    <!-- Unit suffixes -->
+    <string name="unit_weight">g</string>
+    <string name="unit_cals">kcal</string>
+    <string name="unit_sodium">mg</string>
 
     <!--MainActivity strings-->
     <string name="search_button">Search</string>
