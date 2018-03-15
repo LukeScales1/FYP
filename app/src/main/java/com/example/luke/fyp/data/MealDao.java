@@ -1,6 +1,7 @@
 package com.example.luke.fyp.data;
 
 import android.arch.persistence.room.Dao;
+import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
@@ -25,6 +26,10 @@ public interface MealDao {
 
     @Query("SELECT * FROM Meal")
     List<MealWithIngredients> loadMealsWithIngredients();
+
+    @Query("SELECT * FROM Meal WHERE Meal.id = :mealId")
+    Meal findMealById(long mealId);
+
 
     @TypeConverters(DateConverter.class)
     @Query("SELECT * From Meal " +
@@ -79,6 +84,13 @@ public interface MealDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     long[] insert(Meal... meals);
 
+    @Delete
+    void deleteMeal(Meal meal);
+
     @Query("DELETE FROM Meal")
     void deleteAll();
+
+    @Query("DELETE FROM Meal "  +
+            "WHERE Meal.id = :mealId ")
+    void deleteMealById(long mealId);
 }

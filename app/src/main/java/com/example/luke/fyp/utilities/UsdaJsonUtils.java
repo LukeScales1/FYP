@@ -14,7 +14,7 @@ import org.json.JSONObject;
  *
  */
 
-public final class UsfdaJsonUtils {
+public final class UsdaJsonUtils {
 
     public static Nutrient[] getNutrientDataFromJson(String nutrientJsonString) throws JSONException{
 

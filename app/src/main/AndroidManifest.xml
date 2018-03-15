@@ -24,7 +24,8 @@
         <activity
             android:name=".activities.DailyViewActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:clearTaskOnLaunch="true">
             <!--<intent-filter>-->
                 <!--<action android:name="android.intent.action.MAIN" />-->
 
@@ -35,7 +36,8 @@
             android:name=".activities.MealBuilderActivity"
             android:label="@string/title_activity_meal_builder"
             android:parentActivityName=".activities.DailyViewActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:finishOnTaskLaunch="true">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.luke.fyp.activities.DailyViewActivity" />

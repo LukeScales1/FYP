@@ -17,7 +17,7 @@ import com.example.luke.fyp.R;
 import com.example.luke.fyp.adapters.NutritionalInfoAdapter;
 import com.example.luke.fyp.data.AppDatabase;
 import com.example.luke.fyp.data.Ingredient;
-import com.example.luke.fyp.utilities.UsfdaJsonUtils;
+import com.example.luke.fyp.utilities.UsdaJsonUtils;
 
 import org.json.JSONException;
 
@@ -43,13 +43,13 @@ public class WeightActivity extends AppCompatActivity {
     TextView weightTitle;
     EditText weightIn;
 
-    //    String Calories;
-//    String Protein;
-//    String Fat;
-//    String Sats;
-//    String Carbs;
-//    String Sugar;
-//    String Sodium;
+    String Calories;
+    String Protein;
+    String Fat;
+    String Sats;
+    String Carbs;
+    String Sugar;
+    String Sodium;
     Double CalVal;
     Double ProVal;
     Double FatVal;
@@ -82,6 +82,13 @@ public class WeightActivity extends AppCompatActivity {
 
         mDb = AppDatabase.getInMemoryDatabase(getApplicationContext());
 
+        Calories = getString(R.string.name_energy);
+        Protein = getString(R.string.name_protein);
+        Fat = getString(R.string.name_fat);
+        Carbs = getString(R.string.name_carbs);
+        Sugar = getString(R.string.name_sugar);
+        Sodium = getString(R.string.name_sodium);
+        Sats = getString(R.string.name_saturated_fat);
 
         Button confirmBtn = findViewById(R.id.btn_confirm);
         confirmBtn.setOnClickListener(new View.OnClickListener() {
@@ -98,8 +105,13 @@ public class WeightActivity extends AppCompatActivity {
                 //TODO: pass ndbno and save, or store all 26 nutrients in Database
                 Ingredient ingredient1 = makeIngredient(ingredientId, mealId, itemName, weight, "01001", CalVal, FatVal, SatVal, CarbVal, SugVal, ProVal, SodVal);
                 addIngredient(mDb, ingredient1);
+
+                MealBuilderActivity.updateMeal(mDb, mealId);
+
                 Intent intent = new Intent(WeightActivity.this, MealBuilderActivity.class);
                 intent.putExtra(EXTRA_MEAL_ID, mealId);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
             }
         });
@@ -107,6 +119,7 @@ public class WeightActivity extends AppCompatActivity {
         Intent myIntent = getIntent();
         int weightCase = myIntent.getIntExtra(EXTRA_WEIGHT_CASE,0);
         ingredientId = myIntent.getLongExtra(EXTRA_INGREDIENT_ID, 0);
+        //TODO: possibly only pass mealId for case 1?
         mealId = myIntent.getLongExtra(EXTRA_MEAL_ID,0);
         if (mealId == 0) {
             throw new NullPointerException("mealId cannot be zero; ingredient must be assigned to a meal");
@@ -116,7 +129,26 @@ public class WeightActivity extends AppCompatActivity {
             if(weightCase == 0){
                 Ingredient ingredient = mDb.ingredientModel().loadIngredientById(ingredientId);
                 weightIn.setText(ingredient.weight.toString());
-                Nutrient[] nutrients = new Nutrient[0];
+
+                itemName = ingredient.name;
+                nameIn.setText(itemName);
+
+                String grams = getString(R.string.unit_weight);
+                String kcal = getString(R.string.unit_cals);
+                String mgram = getString(R.string.unit_sodium);
+
+                Nutrient[] nutrients = new Nutrient[7];
+
+                nutrients[0] = new Nutrient(Calories, ingredient.calories.toString(), kcal);
+                nutrients[1] = new Nutrient(Fat, ingredient.fat.toString(), grams);
+                nutrients[2] = new Nutrient(Sats, ingredient.saturates.toString(), grams);
+                nutrients[3] = new Nutrient(Protein, ingredient.protein.toString(), grams);
+                nutrients[4] = new Nutrient(Sodium, ingredient.sodium.toString(), mgram);
+                nutrients[5] = new Nutrient(Carbs, ingredient.carbs.toString(), grams);
+                nutrients[6] = new Nutrient(Sugar, ingredient.sugar.toString(), grams);
+
+                nutrientList.addAll(Arrays.asList(nutrients));
+
                 //TODO: implement case of editing existing ingredient
             } else {
                 String nutrientJson = myIntent.getStringExtra(SearchResultsActivity.EXTRA_NUTRITION_DATA);
@@ -135,7 +167,7 @@ public class WeightActivity extends AppCompatActivity {
 
                 Nutrient[] nutrientInfo = new Nutrient[0];
                 try {
-                    nutrientInfo = UsfdaJsonUtils.getNutrientDataFromJson(nutrientJson);
+                    nutrientInfo = UsdaJsonUtils.getNutrientDataFromJson(nutrientJson);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -147,30 +179,31 @@ public class WeightActivity extends AppCompatActivity {
 //            String Unit = nutrientInfo[i].getUnit();
 
                     if (Name.equals(CalorieCheck)) {
-                        aNutrientInfo.setName(getString(R.string.name_energy));
+                        aNutrientInfo.setName(Calories);
                     }
                     if (Name.equals(ProteinCheck)) {
-                        aNutrientInfo.setName(getString(R.string.name_protein));
+                        aNutrientInfo.setName(Protein);
                     }
                     if (Name.equals(FatCheck)) {
-                        aNutrientInfo.setName(getString(R.string.name_fat));
+                        aNutrientInfo.setName(Fat);
                     }
                     if (Name.equals(FibreCheck)) {
                         aNutrientInfo.setName(getString(R.string.name_fiber));
                     }
                     if (Name.equals(CarbCheck)) {
-                        aNutrientInfo.setName(getString(R.string.name_carbs));
+                        aNutrientInfo.setName(Carbs);
                     }
                     if (Name.equals(SugarCheck)) {
-                        aNutrientInfo.setName(getString(R.string.name_sugar));
+                        aNutrientInfo.setName(Sugar);
                     }
                     if (Name.equals(SodiumCheck)) {
-                        aNutrientInfo.setName(getString(R.string.name_sodium));
+                        aNutrientInfo.setName(Sodium);
                     }
                     if (Name.equals(SatsCheck)) {
-                        aNutrientInfo.setName(getString(R.string.name_saturated_fat));
+                        aNutrientInfo.setName(Sats);
                     }
                 }
+
 
                 nutrientList.addAll(Arrays.asList(nutrientInfo));
                 Nutrient water = nutrientList.get(0);

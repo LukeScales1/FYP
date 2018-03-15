@@ -12,7 +12,7 @@ import com.example.luke.fyp.Food;
 import com.example.luke.fyp.R;
 import com.example.luke.fyp.adapters.SearchResultsAdapter;
 import com.example.luke.fyp.utilities.NetworkUtils;
-import com.example.luke.fyp.utilities.UsfdaJsonUtils;
+import com.example.luke.fyp.utilities.UsdaJsonUtils;
 
 import org.json.JSONException;
 
@@ -60,7 +60,7 @@ public class SearchResultsActivity extends AppCompatActivity implements SearchRe
 
         Food[] foodData = new Food[0];
         try {
-            foodData = UsfdaJsonUtils.getFoodDataFromJson(foodResults);
+            foodData = UsdaJsonUtils.getFoodDataFromJson(foodResults);
         } catch (JSONException e) {
             e.printStackTrace();
         }

@@ -1,6 +1,7 @@
 package com.example.luke.fyp.activities;
 
 import android.app.DialogFragment;
+import android.arch.lifecycle.LifecycleOwner;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -26,7 +27,7 @@ import java.util.List;
 
 import static com.example.luke.fyp.activities.MealTypeDialogFragment.EXTRA_MEAL_ID;
 
-public class DailyViewActivity extends AppCompatActivity implements MealTypeDialogFragment.Listener{
+public class DailyViewActivity extends AppCompatActivity implements MealTypeDialogFragment.Listener, LifecycleOwner{
 
     TextView dayTitle;
     TextView testTV;
@@ -52,6 +53,11 @@ public class DailyViewActivity extends AppCompatActivity implements MealTypeDial
     static Boolean D = false;
     static Boolean S = false;
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadMeals();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,28 +67,29 @@ public class DailyViewActivity extends AppCompatActivity implements MealTypeDial
         setSupportActionBar(toolbar);
         mealList = findViewById(R.id.meal_list);
 
+        loadMeals();
 
-        Calendar calendar = Calendar.getInstance();
-        currentYear = calendar.get(Calendar.YEAR);
-        currentMonth = calendar.get(Calendar.MONTH);
-        currentDay = calendar.get(Calendar.DAY_OF_MONTH);
-        int weekDay = calendar.get(Calendar.DAY_OF_WEEK);
-
-        startDate = setDateLimits(calendar, 0);
-        endDate = setDateLimits(calendar, 1);
-
-//        final AppDatabase db;
-        mDb = AppDatabase.getInMemoryDatabase(getApplicationContext());
-//        new FetchMealsTask().execute();
-
-        dayOfWeek = getDayName(weekDay);
-        monthName = getMonthName(currentMonth);
-
-        dayTitle = findViewById(R.id.tv_day_title);
-        String thisString = dayOfWeek + ", " + currentDay + " " + monthName + " " + currentYear;
-        dayTitle.setText(thisString);
-
-        fetchData(startDate, endDate);
+//        Calendar calendar = Calendar.getInstance();
+//        currentYear = calendar.get(Calendar.YEAR);
+//        currentMonth = calendar.get(Calendar.MONTH);
+//        currentDay = calendar.get(Calendar.DAY_OF_MONTH);
+//        int weekDay = calendar.get(Calendar.DAY_OF_WEEK);
+//
+//        startDate = setDateLimits(calendar, 0);
+//        endDate = setDateLimits(calendar, 1);
+//
+////        final AppDatabase db;
+//        mDb = AppDatabase.getInMemoryDatabase(getApplicationContext());
+////        new FetchMealsTask().execute();
+//
+//        dayOfWeek = getDayName(weekDay);
+//        monthName = getMonthName(currentMonth);
+//
+//        dayTitle = findViewById(R.id.tv_day_title);
+//        String thisString = dayOfWeek + ", " + currentDay + " " + monthName + " " + currentYear;
+//        dayTitle.setText(thisString);
+//
+//        fetchData(startDate, endDate);
 
         changeCount = 1;
 
@@ -112,6 +119,32 @@ public class DailyViewActivity extends AppCompatActivity implements MealTypeDial
 
             }
         });
+    }
+
+    private void loadMeals() {
+        Calendar calendar = Calendar.getInstance();
+        currentYear = calendar.get(Calendar.YEAR);
+        currentMonth = calendar.get(Calendar.MONTH);
+        currentDay = calendar.get(Calendar.DAY_OF_MONTH);
+        int weekDay = calendar.get(Calendar.DAY_OF_WEEK);
+
+        startDate = setDateLimits(calendar, 0);
+        endDate = setDateLimits(calendar, 1);
+
+//        final AppDatabase db;
+        mDb = AppDatabase.getInMemoryDatabase(getApplicationContext());
+//        new FetchMealsTask().execute();
+
+        dayOfWeek = getDayName(weekDay);
+        monthName = getMonthName(currentMonth);
+
+        dayTitle = findViewById(R.id.tv_day_title);
+        String thisString = dayOfWeek + ", " + currentDay + " " + monthName + " " + currentYear;
+        dayTitle.setText(thisString);
+
+        fetchData(startDate, endDate);
+
+        changeCount = 1;
     }
 
 //    private class FetchMealsTask extends AsyncTask<Void, Void, Void>{
@@ -184,6 +217,10 @@ public class DailyViewActivity extends AppCompatActivity implements MealTypeDial
         fetchData(startDate, endDate);
     }
 
+//    @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
+//    public void viewResumed(){
+//        loadMeals();
+//    }
     private void populateDb() {
         DatabaseInitialiser.populateSync(mDb);
     }
@@ -232,6 +269,8 @@ public class DailyViewActivity extends AppCompatActivity implements MealTypeDial
             int month = getCurrentMonth();
             int day = getCurrentDay();
             Intent intent = new Intent(DailyViewActivity.this, MealBuilderActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             intent.putExtra(EXTRA_MEAL_ID, id);
 //            intent.putExtra(EXTRA_MEAL_TYPE, type);
 //            intent.putExtra(EXTRA_MEAL_YEAR, year);
@@ -335,6 +374,8 @@ public class DailyViewActivity extends AppCompatActivity implements MealTypeDial
     public void onItemClicked(int position) {
 
     }
+
+    public AppDatabase getmDb(){return mDb;}
 
     public int getCurrentYear(){
         return currentYear;

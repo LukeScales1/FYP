@@ -68,7 +68,10 @@ public class MealAdapter extends ArrayAdapter<Meal> {
     }
 
     private String roundToString(Double mDouble){
-        Double thisDouble = new BigDecimal(mDouble).setScale(1, RoundingMode.HALF_UP).doubleValue();
+        Double thisDouble = 0.0;
+        if(mDouble != null) {
+            thisDouble = new BigDecimal(mDouble).setScale(1, RoundingMode.HALF_UP).doubleValue();
+        }
         return thisDouble.toString();
     }
 //    public String getTitleFromInt(int mealType) {

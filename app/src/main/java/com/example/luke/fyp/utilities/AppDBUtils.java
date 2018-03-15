@@ -33,7 +33,7 @@ public class AppDBUtils {
     }
 
 
-    static Meal ingredientsToMeal(List<Ingredient> mealIngredients, long mealId, int mealType, Date mealTime) {
+    public static Meal ingredientsToMeal(List<Ingredient> mealIngredients, long mealId, int mealType, Date mealTime) {
 
         Double totalCalories = 0.0;
         Double totalCarbs = 0.0;
@@ -127,7 +127,7 @@ public class AppDBUtils {
         return meal;
     }
 
-    static Long addMeal(final AppDatabase db, final Meal meal){
+    public static Long addMeal(final AppDatabase db, final Meal meal){
 
         return db.mealModel().insertMeal(meal);
     }

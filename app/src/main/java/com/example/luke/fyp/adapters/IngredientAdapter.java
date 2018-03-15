@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.TextView;
 
 import com.example.luke.fyp.R;
@@ -19,11 +20,12 @@ import java.util.List;
  * Used by MealBuilderAdapter to display current ingredients of meals
  */
 
-public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.ViewHolder> {
+public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.ViewHolder>  {
 
     private List<Ingredient> ingredientList;
 
     private ItemClickListener itemClickListener;
+    private AdapterView.OnItemLongClickListener itemLongClickListener;
 
     public IngredientAdapter(List<Ingredient> ingredients){this.ingredientList = ingredients;}
 
@@ -53,7 +55,16 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.Vi
         String  protein = String.valueOf(roundThis(ingredient.protein, ingMultiplier)) + grams;
         String  carbs = String.valueOf(roundThis(ingredient.carbs, ingMultiplier)) + grams;
         String sugars = String.valueOf(roundThis(ingredient.sugar, ingMultiplier)) + grams;
-        String sodium = String.valueOf(roundThis(ingredient.sodium, ingMultiplier)) + mgrams;
+        String sodium = "";
+
+        Double thisDouble = roundThis(ingredient.sodium, ingMultiplier);
+            if(thisDouble < 1000.0){
+                sodium = String.valueOf(thisDouble) + mgrams;
+            } else{
+                thisDouble = thisDouble/1000.0;
+                sodium = String.valueOf(thisDouble) + grams;
+            }
+
 
         holder.nameTV.setText(name);
         holder.weightTV.setText(weight);
@@ -81,6 +92,11 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.Vi
         this.itemClickListener = itemClickListener;
     }
 
+//    @Override
+//    public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+//        return false;
+//    }
+
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView nameTV;
         TextView weightTV;
@@ -104,6 +120,20 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.Vi
             sugTV = itemView.findViewById(R.id.ing_sug_total);
 
             itemView.setOnClickListener(this);
+//            itemView.setOnLongClickListener(new View.OnLongClickListener()
+//            {
+//                @Override
+//                public boolean onLongClick(View v) {
+//
+//                    int i = getAdapterPosition();
+//                    Ingredient mIngredient = ingredientList.get(i);
+////                    Toast.makeText(v.getContext(), "Long Click" + i,Toast.LENGTH_SHORT).show();
+//                    MealBuilderActivity mealBuilderActivity = new MealBuilderActivity();
+//                    mealBuilderActivity.thisThing(v, mIngredient);
+//                    return true;
+//
+//                }
+//            })
         }
 
         @Override

@@ -17,11 +17,10 @@
             android:id="@+id/lay1"
             tools:context="com.example.luke.fyp.activities.MealBuilderActivity">
 
-            <!--<android.support.v7.widget.RecyclerView-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:id="@+id/rv_ingredient_items">-->
-            <!--</android.support.v7.widget.RecyclerView>-->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_teeeest"/>
 
              <EditText
                 android:layout_width="match_parent"
@@ -48,7 +47,7 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_ingredient_items"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"

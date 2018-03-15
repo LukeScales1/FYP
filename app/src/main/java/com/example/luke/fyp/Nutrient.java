@@ -13,10 +13,10 @@ public class Nutrient {
 
     }
 
-    public Nutrient(String name, String unit, String value){
+    public Nutrient(String name, String value, String unit){
         this.name = name;
-        this.unit = unit;
         this.value = value;
+        this.unit = unit;
     }
 
     public String getName() {return name;}

@@ -16,15 +16,10 @@ import android.widget.TextView;
 import com.example.luke.fyp.R;
 import com.example.luke.fyp.data.AppDatabase;
 
-import java.util.Calendar;
-import java.util.Date;
-
 import static com.example.luke.fyp.activities.DailyViewActivity.checkB;
 import static com.example.luke.fyp.activities.DailyViewActivity.checkD;
 import static com.example.luke.fyp.activities.DailyViewActivity.checkL;
 import static com.example.luke.fyp.activities.DailyViewActivity.checkS;
-import static com.example.luke.fyp.utilities.AppDBUtils.makeBlankMeal;
-import static com.example.luke.fyp.utilities.AppDBUtils.makeTimestamp;
 
 /**
  * <p>A fragment that shows a list of items as a modal bottom sheet.</p>
@@ -153,24 +148,26 @@ public class MealTypeDialogFragment extends BottomSheetDialogFragment {
 
     private void createMeal(int mealType){
 
-        mDb = AppDatabase.getInMemoryDatabase(getContext());
+//        mDb = AppDatabase.getInMemoryDatabase(getContext());
         int year = ((DailyViewActivity)getActivity()).getCurrentYear();
         int month = ((DailyViewActivity)getActivity()).getCurrentMonth();
         int day = ((DailyViewActivity)getActivity()).getCurrentDay();
 
-        Calendar c = Calendar.getInstance();
+//        Calendar c = Calendar.getInstance();
 
-        Date mealTime = makeTimestamp(year, month, day);
-
-        long newMealId = makeBlankMeal(mDb, mealType, mealTime);
-
+//        Date mealTime = makeTimestamp(year, month, day);
+//
+//        long newMealId = makeBlankMeal(mDb, mealType, mealTime);
+//
 
         Intent intent = new Intent(getActivity(), MealBuilderActivity.class);
-        intent.putExtra(EXTRA_MEAL_ID, newMealId);
+        intent.putExtra(EXTRA_MEAL_TYPE, mealType);
 //        intent.putExtra(EXTRA_MEAL_TYPE, mealType);
-//        intent.putExtra(EXTRA_MEAL_YEAR, year);
-//        intent.putExtra(EXTRA_MEAL_MONTH, month);
-//        intent.putExtra(EXTRA_MEAL_DAY, day);
+        intent.putExtra(EXTRA_MEAL_YEAR, year);
+        intent.putExtra(EXTRA_MEAL_MONTH, month);
+        intent.putExtra(EXTRA_MEAL_DAY, day);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
 
