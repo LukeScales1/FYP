@@ -1,6 +1,22 @@
 <resources>
     <string name="app_name">FYP</string>
 
+    <!--tensorflow-->
+    <string name="picture">Picture</string>
+    <string name="description_info">Info</string>
+    <string name="request_permission">This sample needs camera permission.</string>
+    <string name="camera_error">This device doesn\'t support Camera2 API.</string>
+    <string name="toggle_turn_on">NN:On</string>
+    <string name="toggle_turn_off">NN:Off</string>
+    <string name="toggle">Use NNAPI</string>
+
+    <string name="image_search">Search by Image</string>
+    <string name="image_text">Point the camera at your ingredient and press the button below:</string>
+    <string name="image_capture">Capture</string>
+
+    <!--search results activity-->
+    <string name="search_error">Sorry! No food items in our database match that entry. Please try again - adjust your picture or check your spelling</string>
+
     <!--weight activity-->
     <string name="default_weight">100</string>
     <string name="weight_tv">Weight:</string>

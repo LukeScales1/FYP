@@ -95,30 +95,19 @@ public class DailyViewActivity extends AppCompatActivity implements MealTypeDial
 
         previousDayBtn = findViewById(R.id.left_btn);
         nextDayBtn = findViewById(R.id.right_btn);
-        previousDayBtn.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                changeDay(-1);
-                changeCount--;
-                checkChangeCount(changeCount);
-                }
+        previousDayBtn.setOnClickListener(v -> {
+            changeDay(-1);
+            changeCount--;
+            checkChangeCount(changeCount);
             });
-        nextDayBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                changeDay(1);
-                changeCount++;
-                checkChangeCount(changeCount);
-            }
+        nextDayBtn.setOnClickListener(view -> {
+            changeDay(1);
+            changeCount++;
+            checkChangeCount(changeCount);
         });
 
         FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                MealTypeDialogFragment.newInstance().show(getSupportFragmentManager(), "dialog");
-
-            }
-        });
+        fab.setOnClickListener(view -> MealTypeDialogFragment.newInstance().show(getSupportFragmentManager(), "dialog"));
     }
 
     private void loadMeals() {

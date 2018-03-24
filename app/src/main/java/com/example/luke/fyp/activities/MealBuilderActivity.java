@@ -2,6 +2,7 @@ package com.example.luke.fyp.activities;
 
 import android.app.AlertDialog;
 import android.arch.lifecycle.LifecycleObserver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -15,8 +16,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.ImageButton;
 
+import com.example.luke.fyp.CameraActivity;
 import com.example.luke.fyp.R;
 import com.example.luke.fyp.adapters.IngredientAdapter;
 import com.example.luke.fyp.data.AppDatabase;
@@ -50,10 +52,12 @@ public class MealBuilderActivity extends AppCompatActivity implements Ingredient
 
     private AppDatabase mDb;
     private Meal currentMeal;
-    private Long currentMealId;
-    private Long currentIngId;
+    private static Long currentMealId;
+    private static Long currentIngId;
     private Date mealTime;
     private int mealType;
+
+    static Context currentContext;
 
     IngredientAdapter ingredientAdapter;
     List<Ingredient> ingredientList = new ArrayList<>();
@@ -93,14 +97,12 @@ public class MealBuilderActivity extends AppCompatActivity implements Ingredient
 
         Intent myIntent = getIntent();
         long mealId = myIntent.getLongExtra(MealTypeDialogFragment.EXTRA_MEAL_ID,0);
-        TextView textView = findViewById(R.id.tv_teeeest);
             if (mealId != 0){
                 loadIngredients(mealId);
                 ingredientAdapter = new IngredientAdapter(ingredientList);
                 ingredientAdapter.setClickListener(this);
                 itemList.setAdapter(ingredientAdapter);
                 currentMealId = mealId;
-                textView.setText(String.valueOf(mealId));
             } else {
 
                 int year = myIntent.getIntExtra(EXTRA_MEAL_YEAR,0);
@@ -113,7 +115,6 @@ public class MealBuilderActivity extends AppCompatActivity implements Ingredient
                     }
                 Date mealTime = makeTimestamp(year, month, day);
                 currentMealId = makeBlankMeal(mDb, mealType, mealTime);
-                textView.setText(String.valueOf(currentMealId));
             }
 
 //        mealType = myIntent.getIntExtra(EXTRA_MEAL_TYPE, 1);
@@ -131,12 +132,24 @@ public class MealBuilderActivity extends AppCompatActivity implements Ingredient
 //        new MealCreateTask().execute(currentMeal);
 
         searchInput = findViewById(R.id.et_search);
-        Button searchBtn = findViewById(R.id.btn_search);
+        ImageButton searchBtn = findViewById(R.id.btn_search);
 
         searchBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v){
                 currentIngId = makeBlankIngredient(mDb);
-                searchFoodDatabase();
+                search = searchInput.getText().toString();
+                Context context = MealBuilderActivity.this;
+                searchFoodDatabase(context, search);
+            }
+        });
+
+        Button imgSearch = findViewById(R.id.btn_img_search);
+        imgSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                currentIngId = makeBlankIngredient(mDb);
+                Intent intent = new Intent(MealBuilderActivity.this, CameraActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -361,13 +374,13 @@ public class MealBuilderActivity extends AppCompatActivity implements Ingredient
 //        }
 //    }
 
-    private void searchFoodDatabase(){
-        search = searchInput.getText().toString();
+    public static void searchFoodDatabase(Context context, String search){
+        currentContext = context;
         URL fdaSearchUrl = NetworkUtils.makeSearchUrl(search);
         new FoodSearchTask().execute(fdaSearchUrl);
     }
 
-    public class FoodSearchTask extends AsyncTask<URL, Void, String> {
+    public static class FoodSearchTask extends AsyncTask<URL, Void, String> {
 
         @Override
         protected String doInBackground(URL... params) {
@@ -386,13 +399,13 @@ public class MealBuilderActivity extends AppCompatActivity implements Ingredient
         protected void onPostExecute(String searchResults){
             if (searchResults != null && !searchResults.equals("")){
 //                testResultsText.setText(searchResults);
-                Intent intent = new Intent(MealBuilderActivity.this, SearchResultsActivity.class);
+                Intent intent = new Intent(currentContext, SearchResultsActivity.class);
                 intent.putExtra(SearchResultsActivity.EXTRA_FOOD_DATA, searchResults);
                 intent.putExtra(EXTRA_INGREDIENT_ID, currentIngId);
                 intent.putExtra(MealTypeDialogFragment.EXTRA_MEAL_ID, currentMealId);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
+                currentContext.startActivity(intent);
             }
         }
     }

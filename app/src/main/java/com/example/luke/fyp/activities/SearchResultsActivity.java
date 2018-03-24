@@ -65,12 +65,19 @@ public class SearchResultsActivity extends AppCompatActivity implements SearchRe
             e.printStackTrace();
         }
 
+
         foodList.addAll(Arrays.asList(foodData));
+        if(foodList.size() < 1){
+            String name = getString(R.string.search_error);
+            Food food = new Food(null, name, null );
+            foodList.add(0, food);
+        }
 
         itemAdapter = new SearchResultsAdapter(foodList);
         itemAdapter.setClickListener(this);
 
         itemList.setAdapter(itemAdapter);
+
     }
 
     @Override
