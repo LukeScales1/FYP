@@ -20,6 +20,7 @@ import android.widget.ImageButton;
 
 import com.example.luke.fyp.CameraActivity;
 import com.example.luke.fyp.R;
+import com.example.luke.fyp.activities.fragments.MealTypeDialogFragment;
 import com.example.luke.fyp.adapters.IngredientAdapter;
 import com.example.luke.fyp.data.AppDatabase;
 import com.example.luke.fyp.data.Ingredient;
@@ -28,15 +29,16 @@ import com.example.luke.fyp.utilities.NetworkUtils;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-import static com.example.luke.fyp.activities.MealTypeDialogFragment.EXTRA_MEAL_DAY;
-import static com.example.luke.fyp.activities.MealTypeDialogFragment.EXTRA_MEAL_ID;
-import static com.example.luke.fyp.activities.MealTypeDialogFragment.EXTRA_MEAL_MONTH;
-import static com.example.luke.fyp.activities.MealTypeDialogFragment.EXTRA_MEAL_TYPE;
-import static com.example.luke.fyp.activities.MealTypeDialogFragment.EXTRA_MEAL_YEAR;
+import static com.example.luke.fyp.activities.fragments.MealTypeDialogFragment.EXTRA_MEAL_DAY;
+import static com.example.luke.fyp.activities.fragments.MealTypeDialogFragment.EXTRA_MEAL_ID;
+import static com.example.luke.fyp.activities.fragments.MealTypeDialogFragment.EXTRA_MEAL_MONTH;
+import static com.example.luke.fyp.activities.fragments.MealTypeDialogFragment.EXTRA_MEAL_TYPE;
+import static com.example.luke.fyp.activities.fragments.MealTypeDialogFragment.EXTRA_MEAL_YEAR;
 import static com.example.luke.fyp.utilities.AppDBUtils.addMeal;
 import static com.example.luke.fyp.utilities.AppDBUtils.ingredientsToMeal;
 import static com.example.luke.fyp.utilities.AppDBUtils.makeBlankIngredient;
@@ -96,26 +98,39 @@ public class MealBuilderActivity extends AppCompatActivity implements Ingredient
         mDb = AppDatabase.getInMemoryDatabase(getApplicationContext());
 
         Intent myIntent = getIntent();
-        long mealId = myIntent.getLongExtra(MealTypeDialogFragment.EXTRA_MEAL_ID,0);
-            if (mealId != 0){
+        int year = myIntent.getIntExtra(EXTRA_MEAL_YEAR, 0);
+        int month = myIntent.getIntExtra(EXTRA_MEAL_MONTH, 0);
+        int day = myIntent.getIntExtra(EXTRA_MEAL_DAY, 0);
+        mealType = myIntent.getIntExtra(EXTRA_MEAL_TYPE, 0);
+        boolean overwrite = myIntent.getBooleanExtra(MealTypeDialogFragment.EXTRA_OVERWRITE_CASE,false);
+        if(overwrite){
+            if (mealType == 0) {
+                throw new NullPointerException("Houston, we have a problem: mealType must be passed to overwrite meal");
+            }
+            long mealId = overwriteIngredients(mealType, day, month, year);
+            ingredientAdapter = new IngredientAdapter(ingredientList);
+            ingredientAdapter.setClickListener(this);
+            itemList.setAdapter(ingredientAdapter);
+            currentMealId = mealId;
+        } else {
+            long mealId = myIntent.getLongExtra(MealTypeDialogFragment.EXTRA_MEAL_ID, 0);
+            if (mealId != 0) {
                 loadIngredients(mealId);
                 ingredientAdapter = new IngredientAdapter(ingredientList);
                 ingredientAdapter.setClickListener(this);
                 itemList.setAdapter(ingredientAdapter);
                 currentMealId = mealId;
             } else {
-
-                int year = myIntent.getIntExtra(EXTRA_MEAL_YEAR,0);
-                int month = myIntent.getIntExtra(EXTRA_MEAL_MONTH,0);
-                int day = myIntent.getIntExtra(EXTRA_MEAL_DAY,0);
-
-                mealType = myIntent.getIntExtra(EXTRA_MEAL_TYPE,0);
-                    if(mealType == 0){
-                        throw new NullPointerException("Houston, we have a problem: mealType must be set for new meal creation");
-                    }
+                if (year == 0) {
+                    throw new NullPointerException("Houston, we have a problem: date must be set");
+                }
+                if (mealType == 0) {
+                    throw new NullPointerException("Houston, we have a problem: mealType must be set for new meal creation");
+                }
                 Date mealTime = makeTimestamp(year, month, day);
                 currentMealId = makeBlankMeal(mDb, mealType, mealTime);
             }
+        }
 
 //        mealType = myIntent.getIntExtra(EXTRA_MEAL_TYPE, 1);
 //        Toast.makeText(MealBuilderActivity.this, "Meal Type = " + mealType, Toast.LENGTH_SHORT).show();
@@ -334,6 +349,17 @@ public class MealBuilderActivity extends AppCompatActivity implements Ingredient
 //        intent.putExtra(EXTRA_INGREDIENT_ID, ingredient.id);
 //        intent.putExtra(EXTRA_MEAL_ID, currentMealId);
 //        startActivity(intent);
+    }
+
+    private long overwriteIngredients(int mealType, int day, int month, int year) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.MONTH, month);
+        calendar.set(Calendar.DAY_OF_MONTH, day);
+        Date dayStart = DailyViewActivity.setDateLimits(calendar, 0);
+        Date dayEnd = DailyViewActivity.setDateLimits(calendar, 1);
+        ingredientList = mDb.mealModel().findMealIngredientsByDayandType(mealType, dayStart, dayEnd);
+        return mDb.mealModel().findMealIdByDayandType(mealType, dayStart, dayEnd);
     }
 
     private void loadIngredients(long mealId) {

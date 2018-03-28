@@ -23,10 +23,12 @@
 
     <com.example.luke.fyp.AutoFitTextureView
         android:id="@+id/texture"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/control"/>
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/control"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <FrameLayout
         android:id="@+id/control"
@@ -36,7 +38,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:background="@color/control_background"
+        android:background="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -71,7 +73,7 @@
 
     </FrameLayout>
 
-    <Button
+    <ImageButton
         android:id="@+id/btn"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
@@ -79,16 +81,19 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:padding="20dp"
+        android:src="@android:drawable/ic_menu_camera"
+        android:backgroundTint="@color/colorAccent"
         android:text="@string/image_capture"
         app:layout_constraintBottom_toBottomOf="@+id/control"
         app:layout_constraintEnd_toEndOf="@+id/control"
-        app:layout_constraintStart_toStartOf="@+id/control" />
+        app:layout_constraintStart_toStartOf="@+id/control"
+        app:layout_constraintTop_toTopOf="@id/control"/>
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="405dp" />
+        app:layout_constraintGuide_begin="450dp" />
 
 </android.support.constraint.ConstraintLayout>

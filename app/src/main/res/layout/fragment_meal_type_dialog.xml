@@ -40,7 +40,7 @@
         android:clipToPadding="false"
         android:paddingBottom="@dimen/list_item_spacing_half"
         android:paddingTop="@dimen/list_item_spacing_half"
-        tools:context="com.example.luke.fyp.activities.MealTypeDialogFragment"
+        tools:context="com.example.luke.fyp.activities.fragments.MealTypeDialogFragment"
         tools:listitem="@layout/fragment_meal_type_dialog_item" />
 
 </LinearLayout>

@@ -1,4 +1,4 @@
-package com.example.luke.fyp.activities;
+package com.example.luke.fyp.activities.fragments;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -11,6 +11,7 @@ import android.widget.DatePicker;
 import android.widget.TextView;
 
 import com.example.luke.fyp.R;
+import com.example.luke.fyp.activities.DailyViewActivity;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -25,10 +26,6 @@ import java.util.Date;
 // */
 public class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
 
-    private DatePicker datePicker;
-    private int year;
-    private int month;
-    private int day;
     private int dayOfWeek;
 
     public DatePickerFragment() {
@@ -38,9 +35,9 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         //Use the current date as the default date in the date picker
         final Calendar c = Calendar.getInstance();
-        year = c.get(Calendar.YEAR);
-        month = c.get(Calendar.MONTH);
-        day = c.get(Calendar.DAY_OF_MONTH);
+        int year = c.get(Calendar.YEAR);
+        int month = c.get(Calendar.MONTH);
+        int day = c.get(Calendar.DAY_OF_MONTH);
         dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
         return new DatePickerDialog(getActivity(),this, year, month, day);
     }
@@ -75,8 +72,9 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
         String monthName = ((DailyViewActivity)getActivity()).getMonthName(month);
         String dayName = ((DailyViewActivity)getActivity()).getDayName(dayOfWeek);
 
-        //TODO: improve, remove concatenation
-        tv.setText(dayName + ", " + day + " " + monthName + " " + year);
+
+        String thisString = dayName + ", " + day + " " + monthName + " " + year;
+        tv.setText(thisString);
 
         Date startDate = ((DailyViewActivity)getActivity()).setDateLimits(calendar, 0);
         Date endDate = ((DailyViewActivity)getActivity()).setDateLimits(calendar, 1);

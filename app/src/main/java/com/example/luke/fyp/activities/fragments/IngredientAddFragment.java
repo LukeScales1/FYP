@@ -1,4 +1,4 @@
-package com.example.luke.fyp.activities;
+package com.example.luke.fyp.activities.fragments;
 
 import android.content.Context;
 import android.net.Uri;

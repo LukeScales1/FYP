@@ -20,17 +20,17 @@ public class AppDBUtils {
 
 
 
-    public static List<Ingredient> fetchIngredientsOfMeal(Date start, Date end) {
-
-        return mDb.mealModel().findMealIngredientsByDayandType("B", start, end);
-//        if (mealIngredients.size() > 0) {
-//            for (Ingredient mealIngredient : mealIngredients) {
-//                testTV.append("ID: " + mealIngredient.id + "\nMeal ID:" + mealIngredient.meal_id + "\nWeight:" + mealIngredient.weight + "g\nTotal Calories: " + mealIngredient.calories.toString() + "\n\n");
-//            }
-//        } else {
-//            testTV.setText(getString(R.string.daily_view_no_meals));
-//        }
-    }
+//    public static List<Ingredient> fetchIngredientsOfMeal(Date start, Date end) {
+//
+//        return mDb.mealModel().findMealIngredientsByDayandType("B", start, end);
+////        if (mealIngredients.size() > 0) {
+////            for (Ingredient mealIngredient : mealIngredients) {
+////                testTV.append("ID: " + mealIngredient.id + "\nMeal ID:" + mealIngredient.meal_id + "\nWeight:" + mealIngredient.weight + "g\nTotal Calories: " + mealIngredient.calories.toString() + "\n\n");
+////            }
+////        } else {
+////            testTV.setText(getString(R.string.daily_view_no_meals));
+////        }
+//    }
 
 
     public static Meal ingredientsToMeal(List<Ingredient> mealIngredients, long mealId, int mealType, Date mealTime) {

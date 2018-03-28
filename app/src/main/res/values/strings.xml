@@ -80,7 +80,7 @@
     <string name="ndbno_apples">09003</string>
 
     <!--DailyViewActivity strings-->
-    <string name="title_activity_daily_view">This</string>
+    <string name="title_activity_daily_view">DailyViewActivity</string>
     <string name="daily_view_right_btn">Right button: use to change to next day</string>
     <string name="daily_view_left_btn">Left button: use to change to previous day</string>
     <string name="daily_view_no_meals">No meals stored for this day. Click the plus button to add a meal.</string>

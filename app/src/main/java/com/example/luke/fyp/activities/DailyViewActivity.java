@@ -1,7 +1,9 @@
 package com.example.luke.fyp.activities;
 
+import android.app.AlertDialog;
 import android.app.DialogFragment;
 import android.arch.lifecycle.LifecycleOwner;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -15,17 +17,18 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.luke.fyp.R;
+import com.example.luke.fyp.activities.fragments.DatePickerFragment;
+import com.example.luke.fyp.activities.fragments.MealTypeDialogFragment;
 import com.example.luke.fyp.adapters.MealAdapter;
 import com.example.luke.fyp.data.AppDatabase;
 import com.example.luke.fyp.data.Meal;
-import com.example.luke.fyp.utilities.DatabaseInitialiser;
 
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import static com.example.luke.fyp.activities.MealTypeDialogFragment.EXTRA_MEAL_ID;
+import static com.example.luke.fyp.activities.fragments.MealTypeDialogFragment.EXTRA_MEAL_ID;
 
 public class DailyViewActivity extends AppCompatActivity implements MealTypeDialogFragment.Listener, LifecycleOwner{
 
@@ -66,35 +69,12 @@ public class DailyViewActivity extends AppCompatActivity implements MealTypeDial
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mealList = findViewById(R.id.meal_list);
+        dayTitle = findViewById(R.id.tv_day_title);
 
         loadMeals();
 
-//        Calendar calendar = Calendar.getInstance();
-//        currentYear = calendar.get(Calendar.YEAR);
-//        currentMonth = calendar.get(Calendar.MONTH);
-//        currentDay = calendar.get(Calendar.DAY_OF_MONTH);
-//        int weekDay = calendar.get(Calendar.DAY_OF_WEEK);
-//
-//        startDate = setDateLimits(calendar, 0);
-//        endDate = setDateLimits(calendar, 1);
-//
-////        final AppDatabase db;
-//        mDb = AppDatabase.getInMemoryDatabase(getApplicationContext());
-////        new FetchMealsTask().execute();
-//
-//        dayOfWeek = getDayName(weekDay);
-//        monthName = getMonthName(currentMonth);
-//
-//        dayTitle = findViewById(R.id.tv_day_title);
-//        String thisString = dayOfWeek + ", " + currentDay + " " + monthName + " " + currentYear;
-//        dayTitle.setText(thisString);
-//
-//        fetchData(startDate, endDate);
-
-        changeCount = 1;
-
-        previousDayBtn = findViewById(R.id.left_btn);
-        nextDayBtn = findViewById(R.id.right_btn);
+        previousDayBtn = findViewById(R.id.btn_left);
+        nextDayBtn = findViewById(R.id.btn_right);
         previousDayBtn.setOnClickListener(v -> {
             changeDay(-1);
             changeCount--;
@@ -120,14 +100,13 @@ public class DailyViewActivity extends AppCompatActivity implements MealTypeDial
         startDate = setDateLimits(calendar, 0);
         endDate = setDateLimits(calendar, 1);
 
-//        final AppDatabase db;
+        //TODO: remove from main thread
         mDb = AppDatabase.getInMemoryDatabase(getApplicationContext());
-//        new FetchMealsTask().execute();
+
 
         dayOfWeek = getDayName(weekDay);
         monthName = getMonthName(currentMonth);
 
-        dayTitle = findViewById(R.id.tv_day_title);
         String thisString = dayOfWeek + ", " + currentDay + " " + monthName + " " + currentYear;
         dayTitle.setText(thisString);
 
@@ -193,36 +172,25 @@ public class DailyViewActivity extends AppCompatActivity implements MealTypeDial
         currentDay = calendar.get(Calendar.DAY_OF_MONTH);
         int weekDay = calendar.get(Calendar.DAY_OF_WEEK);
 
-        startDate = setDateLimits(calendar, 0);
-        endDate = setDateLimits(calendar, 1);
-
         dayOfWeek = getDayName(weekDay);
         monthName = getMonthName(currentMonth);
 
-        dayTitle = findViewById(R.id.tv_day_title);
         String thisString = dayOfWeek + ", " + currentDay + " " + monthName + " " + currentYear;
         dayTitle.setText(thisString);
+
+        startDate = setDateLimits(calendar, 0);
+        endDate = setDateLimits(calendar, 1);
 
         fetchData(startDate, endDate);
     }
 
-//    @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
-//    public void viewResumed(){
-//        loadMeals();
-//    }
-    private void populateDb() {
-        DatabaseInitialiser.populateSync(mDb);
-    }
 
-    //TODO: on fetching data check implement logic to check for and track what meals are returned, facilitate replacing meals i.e. if (B) then replace B when adding B; don't allow duplicates
+    //TODO: remove from main thread
     public void fetchData(Date start, Date end) {
-        // remove from main thread
-
         final List<Meal> meals = mDb.mealModel().findAllMealsByDay(start, end);
         Collections.sort(meals);
         checkMeals(meals);
 
-//        List<Ingredient> mealIngredients = fetchIngredientsOfMeal(start, end);
         MealAdapter mealAdapter = new MealAdapter(DailyViewActivity.this, meals);
         mealList.setAdapter(mealAdapter);
         mealList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -231,25 +199,27 @@ public class DailyViewActivity extends AppCompatActivity implements MealTypeDial
                 Meal meal = meals.get(i);
                 String mealTitle = meal.mealTitle;
                 Snackbar.make(view, mealTitle + ": would you like to edit this meal?", Snackbar.LENGTH_LONG)
-                        .setAction("Edit", new MyEditMealListener(meal.id, meal.mealType)).show();
+                        .setAction("Edit", new EditMealListener(meal.id)).show();
             }
         });
-//        mealList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-//            @Override
-//            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-//                Meal meal = meals.get(i);
-//            }
-//        });
+        mealList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Meal meal = meals.get(i);
+                String mealTitle = meal.mealTitle;
+                Snackbar.make(view, mealTitle + ": would you like to delete this meal?", Snackbar.LENGTH_LONG)
+                        .setAction("Delete", new DeleteMealListener(meal.id)).show();
+                return true;
+            }
+        });
     }
 
-    public class MyEditMealListener implements View.OnClickListener{
+    private class EditMealListener implements View.OnClickListener{
 
         long id;
-        int type;
 
-        MyEditMealListener(long mealId, int mealType) {
+        EditMealListener(long mealId) {
             this.id = mealId;
-            this.type = mealType;
         }
 
         @Override
@@ -270,6 +240,31 @@ public class DailyViewActivity extends AppCompatActivity implements MealTypeDial
         }
     }
 
+    private class DeleteMealListener implements View.OnClickListener {
+
+        long id;
+
+        DeleteMealListener(long mealId) {
+            this.id = mealId;
+        }
+
+        @Override
+        public void onClick(View view) {
+            new AlertDialog.Builder(DailyViewActivity.this)
+                    .setTitle("Delete Meal")
+                    .setMessage("Are you sure you want to delete this meal?")
+                    .setNegativeButton("Cancel", null)
+                    .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+
+                        public void onClick(DialogInterface arg0, int arg1) {
+                            mDb.mealModel().deleteMealById(id);
+                            fetchData(startDate, endDate);
+
+                        }
+                    }).create().show();
+        }
+    }
+
     private void checkMeals(List<Meal> meals) {
         for (Meal meal : meals) {
             int type = meal.mealType;
@@ -285,6 +280,7 @@ public class DailyViewActivity extends AppCompatActivity implements MealTypeDial
         }
     }
 
+    //Boolean state checks
     public static Boolean checkB(){
         return B;
     }
@@ -299,8 +295,7 @@ public class DailyViewActivity extends AppCompatActivity implements MealTypeDial
     }
 
     //Use only for setting search period for returning database values i.e. start & end of day to query for data
-    public Date setDateLimits(Calendar calendar, int dayOffset) {
-//        Calendar calendar = Calendar.getInstance();
+    public static Date setDateLimits(Calendar calendar, int dayOffset) {
         calendar.add(Calendar.DATE, dayOffset);
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
@@ -364,8 +359,7 @@ public class DailyViewActivity extends AppCompatActivity implements MealTypeDial
 
     }
 
-    public AppDatabase getmDb(){return mDb;}
-
+    //getters & setters
     public int getCurrentYear(){
         return currentYear;
     }
@@ -383,4 +377,6 @@ public class DailyViewActivity extends AppCompatActivity implements MealTypeDial
         currentMonth = month;
         currentDay = day;
     }
+
+
 }

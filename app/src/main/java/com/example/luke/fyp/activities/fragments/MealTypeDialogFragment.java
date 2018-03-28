@@ -1,6 +1,8 @@
-package com.example.luke.fyp.activities;
+package com.example.luke.fyp.activities.fragments;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,6 +16,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.luke.fyp.R;
+import com.example.luke.fyp.activities.DailyViewActivity;
+import com.example.luke.fyp.activities.MealBuilderActivity;
 import com.example.luke.fyp.data.AppDatabase;
 
 import static com.example.luke.fyp.activities.DailyViewActivity.checkB;
@@ -37,8 +41,11 @@ public class MealTypeDialogFragment extends BottomSheetDialogFragment {
     public static final String EXTRA_MEAL_YEAR = "com.example.luke.fyp.MEAL_YEAR";
     public static final String EXTRA_MEAL_MONTH = "com.example.luke.fyp.MEAL_MONTH";
     public static final String EXTRA_MEAL_DAY = "com.example.luke.fyp.MEAL_DAY";
+    public static final String EXTRA_OVERWRITE_CASE = "com.example.luke.fyp.OVERWRITE_CASE";
     private static final String ARG_ITEM_COUNT = "item_count";
     private Listener mListener;
+
+    int overWrite;
 
 //    Boolean mB;
 //    Boolean mL;
@@ -47,6 +54,7 @@ public class MealTypeDialogFragment extends BottomSheetDialogFragment {
 
     private AppDatabase mDb;
 
+    //Edited code
     public static MealTypeDialogFragment newInstance() {
         int itemCount = 4;
         final MealTypeDialogFragment fragment = new MealTypeDialogFragment();
@@ -105,42 +113,47 @@ public class MealTypeDialogFragment extends BottomSheetDialogFragment {
                     if (mListener != null) {
                         mListener.onItemClicked(getAdapterPosition());
                         int mealType = getAdapterPosition() + 1;
-                            if(mealType == 1){
-                                if(!checkB()){
-                                    createMeal(mealType);
-                                }
-                            } else if(mealType == 2){
-                                if(!checkL()){
-                                    createMeal(mealType);
-                                }
-                            } else if(mealType == 3){
-                                if(!checkD()){
-                                    createMeal(mealType);
-                                }
-                            } else if(mealType == 4){
-                                if(!checkS()){
-                                    createMeal(mealType);
-                                }
-                            }
-//                        mB = checkB();
-//                        mL = checkL();
-//                        mD = checkD();
-                        //TODO: implement logic for retrieving bools of dailyview and overwrite or prompt user if meal already exists
-//                        String mealType = text.toString().substring(0, 1);
-
-                        int year = ((DailyViewActivity)getActivity()).getCurrentYear();
-                        int month = ((DailyViewActivity)getActivity()).getCurrentMonth();
-                        int day = ((DailyViewActivity)getActivity()).getCurrentDay();
-
-
-                        Intent intent = new Intent(getActivity(), MealBuilderActivity.class);
-                        intent.putExtra(EXTRA_MEAL_ID, 0);
-                        intent.putExtra(EXTRA_MEAL_TYPE, mealType);
-                        intent.putExtra(EXTRA_MEAL_YEAR, year);
-                        intent.putExtra(EXTRA_MEAL_MONTH, month);
-                        intent.putExtra(EXTRA_MEAL_DAY, day);
-                        startActivity(intent);
+                        //Checks if mealType already in database - if statement simplified
+                        boolean duplicateB = mealType == 1 && checkB();
+                        boolean duplicateL = mealType == 2 && checkL();
+                        boolean duplicateD = mealType == 3 && checkD();
+                        boolean duplicateS = mealType == 4 && checkS();
+                        if(duplicateB || duplicateL || duplicateD || duplicateS){
+//                            throw new NullPointerException("Houston, we have a problem: mealType must be passed to overwrite meal");
+                            postNotice(text.getText().toString(), mealType);
+                        } else {
+                            launchBuilder(mealType,false );
+                        }
                     }
+                }
+
+                private void launchBuilder(int mealType, boolean overwrite){
+                    int year = ((DailyViewActivity)getActivity()).getCurrentYear();
+                    int month = ((DailyViewActivity)getActivity()).getCurrentMonth();
+                    int day = ((DailyViewActivity)getActivity()).getCurrentDay();
+
+
+                    Intent intent = new Intent(getActivity(), MealBuilderActivity.class);
+                    intent.putExtra(EXTRA_OVERWRITE_CASE, overwrite);
+                    intent.putExtra(EXTRA_MEAL_ID, 0);
+                    intent.putExtra(EXTRA_MEAL_TYPE, mealType);
+                    intent.putExtra(EXTRA_MEAL_YEAR, year);
+                    intent.putExtra(EXTRA_MEAL_MONTH, month);
+                    intent.putExtra(EXTRA_MEAL_DAY, day);
+                    startActivity(intent);
+                }
+
+                private void postNotice(String mealTitle, int mealType) {
+                    new AlertDialog.Builder(getContext())
+                            .setTitle("Overwrite Meal")
+                            .setMessage("You already have a " + mealTitle + " saved. Would you like to overwrite it?")
+                            .setNegativeButton("Cancel", null)
+                            .setPositiveButton("Overwrite", new DialogInterface.OnClickListener() {
+
+                                public void onClick(DialogInterface arg0, int arg1) {
+                                    launchBuilder(mealType,true);
+                                }
+                            }).create().show();
                 }
             });
         }
@@ -184,6 +197,7 @@ public class MealTypeDialogFragment extends BottomSheetDialogFragment {
             return new ViewHolder(LayoutInflater.from(parent.getContext()), parent);
         }
 
+        //Edited code
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
             if(position == 0){

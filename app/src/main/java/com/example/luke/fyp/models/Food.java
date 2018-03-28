@@ -1,4 +1,4 @@
-package com.example.luke.fyp;
+package com.example.luke.fyp.models;
 
 /**
  * Created by Luke on 29/09/2017.

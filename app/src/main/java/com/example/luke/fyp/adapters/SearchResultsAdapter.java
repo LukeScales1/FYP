@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.luke.fyp.Food;
+import com.example.luke.fyp.models.Food;
 import com.example.luke.fyp.R;
 
 import java.util.List;
@@ -51,7 +51,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
         public TextView titleTextView;
         public ViewHolder(View itemView) {
             super(itemView);
-            titleTextView = (TextView) itemView.findViewById(R.id.tv_results_item);
+            titleTextView = itemView.findViewById(R.id.tv_results_item);
             itemView.setOnClickListener(this);
         }
 

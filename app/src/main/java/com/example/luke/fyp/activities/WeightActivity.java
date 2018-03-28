@@ -12,7 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.example.luke.fyp.Nutrient;
+import com.example.luke.fyp.models.Nutrient;
 import com.example.luke.fyp.R;
 import com.example.luke.fyp.adapters.NutritionalInfoAdapter;
 import com.example.luke.fyp.data.AppDatabase;
@@ -27,7 +27,7 @@ import java.util.List;
 
 import static com.example.luke.fyp.activities.MealBuilderActivity.EXTRA_INGREDIENT_ID;
 import static com.example.luke.fyp.activities.MealBuilderActivity.EXTRA_WEIGHT_CASE;
-import static com.example.luke.fyp.activities.MealTypeDialogFragment.EXTRA_MEAL_ID;
+import static com.example.luke.fyp.activities.fragments.MealTypeDialogFragment.EXTRA_MEAL_ID;
 import static com.example.luke.fyp.utilities.AppDBUtils.addIngredient;
 import static com.example.luke.fyp.utilities.AppDBUtils.makeIngredient;
 
@@ -50,14 +50,14 @@ public class WeightActivity extends AppCompatActivity {
     String Carbs;
     String Sugar;
     String Sodium;
-    Double CalVal;
-    Double ProVal;
-    Double FatVal;
+    Double CalVal = 0.0;
+    Double ProVal = 0.0;
+    Double FatVal = 0.0;
 //    Double FibVal;
-    Double SatVal;
-    Double CarbVal;
-    Double SugVal;
-    Double SodVal;
+    Double SatVal = 0.0;
+    Double CarbVal = 0.0;
+    Double SugVal = 0.0;
+    Double SodVal = 0.0;
 
 
     long mealId;

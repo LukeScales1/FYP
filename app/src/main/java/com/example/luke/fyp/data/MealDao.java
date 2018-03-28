@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Created by Luke on 03/02/2018.
  *
- * Interface for accessing Meal data & MealWithIngredients Data. Work in progress
+ * Interface for accessing Meal data & some Ingredient Data. Work in progress
  */
 @Dao
 public interface MealDao {
@@ -24,8 +24,6 @@ public interface MealDao {
     @Query("SELECT * From Meal")
     List<Meal> findAllMeals();
 
-    @Query("SELECT * FROM Meal")
-    List<MealWithIngredients> loadMealsWithIngredients();
 
     @Query("SELECT * FROM Meal WHERE Meal.id = :mealId")
     Meal findMealById(long mealId);
@@ -64,7 +62,15 @@ public interface MealDao {
             "WHERE Meal.mealType LIKE :mealType " +
             "AND Meal.mealTime > :dayStart " +
             "AND Meal.mealTime < :dayEnd")
-    List<Ingredient> findMealIngredientsByDayandType(String mealType, Date dayStart, Date dayEnd);
+    List<Ingredient> findMealIngredientsByDayandType(int mealType, Date dayStart, Date dayEnd);
+
+    @TypeConverters(DateConverter.class)
+    @Query("SELECT Meal.id From Meal " +
+            "WHERE Meal.mealType LIKE :mealType " +
+            "AND Meal.mealTime > :dayStart " +
+            "AND Meal.mealTime < :dayEnd")
+    long findMealIdByDayandType(int mealType, Date dayStart, Date dayEnd);
+
 
 //    @Query("SELECT Meal.id, Meal.mealType as type, Meal.mealTime " +
 //            "FROM Meal " +

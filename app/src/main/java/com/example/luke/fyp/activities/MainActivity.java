@@ -10,14 +10,12 @@ import android.widget.TextView;
 
 import com.example.luke.fyp.R;
 import com.example.luke.fyp.data.AppDatabase;
-import com.example.luke.fyp.data.Ingredient;
 import com.example.luke.fyp.utilities.DatabaseInitialiser;
 import com.example.luke.fyp.utilities.NetworkUtils;
 
 import java.net.URL;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -55,25 +53,25 @@ public class MainActivity extends AppCompatActivity
         DatabaseInitialiser.populateSync(mDb);
     }
 
-    private void fetchData() {
-        //TODO: move to adapter/improve
-//        List<Meal> todaysMeals = mDb.mealModel().findAllMeals();
-
-//        for (Meal todaysMeal : todaysMeals) {
-//                testTV.append("ID: " + todaysMeal.id + "\nMeal type:" + todaysMeal.mealType + "\nTotal Calories: " + todaysMeal.totalCalories.toString() + "\n\n");
+//    private void fetchData() {
+//        //TODO: move to adapter/improve
+////        List<Meal> todaysMeals = mDb.mealModel().findAllMeals();
+//
+////        for (Meal todaysMeal : todaysMeals) {
+////                testTV.append("ID: " + todaysMeal.id + "\nMeal type:" + todaysMeal.mealType + "\nTotal Calories: " + todaysMeal.totalCalories.toString() + "\n\n");
+////            }
+////        List<Ingredient> mealIngredients = mDb.mealModel().findAllIngredientsFromMeal("B");
+//        Date startDate = getStartDateWithZeroEndDateWithOne(0);
+//        Date endDate = getStartDateWithZeroEndDateWithOne(1);
+//        List<Ingredient> mealIngredients = mDb.mealModel().findMealIngredientsByDayandType("B", startDate, endDate);
+//        if (mealIngredients.size() > 0) {
+//            for (Ingredient mealIngredient : mealIngredients) {
+//                testTV.append("ID: " + mealIngredient.id + "\nMeal ID:" + mealIngredient.meal_id + "\nWeight:" + mealIngredient.weight + "g\nTotal Calories: " + mealIngredient.calories.toString() + "\n\n");
 //            }
-//        List<Ingredient> mealIngredients = mDb.mealModel().findAllIngredientsFromMeal("B");
-        Date startDate = getStartDateWithZeroEndDateWithOne(0);
-        Date endDate = getStartDateWithZeroEndDateWithOne(1);
-        List<Ingredient> mealIngredients = mDb.mealModel().findMealIngredientsByDayandType("B", startDate, endDate);
-        if (mealIngredients.size() > 0) {
-            for (Ingredient mealIngredient : mealIngredients) {
-                testTV.append("ID: " + mealIngredient.id + "\nMeal ID:" + mealIngredient.meal_id + "\nWeight:" + mealIngredient.weight + "g\nTotal Calories: " + mealIngredient.calories.toString() + "\n\n");
-            }
-        } else{
-            testTV.setText("Didn't work");
-        }
-    }
+//        } else{
+//            testTV.setText("Didn't work");
+//        }
+//    }
 
     //Use only for setting search period for returning database values i.e. start & end of day to query for data
     private static Date getStartDateWithZeroEndDateWithOne(int dayOffset) {

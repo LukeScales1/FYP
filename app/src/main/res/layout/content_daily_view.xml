@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="@string/daily_view_left_btn"
-        android:id="@+id/left_btn"
+        android:id="@+id/btn_left"
         android:src="@android:drawable/ic_media_previous"
         app:layout_constraintLeft_toLeftOf="@+id/tv_day_title"
         style="?android:attr/borderlessButtonStyle"
@@ -28,7 +28,7 @@
         android:textSize="20sp" />
 
     <ImageButton
-        android:id="@+id/right_btn"
+        android:id="@+id/btn_right"
         style="?android:attr/borderlessButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

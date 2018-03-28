@@ -38,7 +38,7 @@
         <activity android:name=".activities.WeightActivity" />
         <activity
             android:name=".activities.DailyViewActivity"
-            android:label="@string/app_name"
+            android:label="@string/title_activity_daily_view"
             android:theme="@style/AppTheme.NoActionBar"
             android:clearTaskOnLaunch="true">
             <!--<intent-filter>-->

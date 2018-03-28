@@ -8,8 +8,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import com.example.luke.fyp.Food;
+import com.example.luke.fyp.models.Food;
 import com.example.luke.fyp.R;
+import com.example.luke.fyp.activities.fragments.MealTypeDialogFragment;
 import com.example.luke.fyp.adapters.SearchResultsAdapter;
 import com.example.luke.fyp.utilities.NetworkUtils;
 import com.example.luke.fyp.utilities.UsdaJsonUtils;

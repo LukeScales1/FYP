@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.luke.fyp.activities.IngredientAddFragment">
+    tools:context="com.example.luke.fyp.activities.fragments.IngredientAddFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView

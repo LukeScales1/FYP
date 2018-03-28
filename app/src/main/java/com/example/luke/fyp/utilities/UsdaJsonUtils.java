@@ -1,7 +1,7 @@
 package com.example.luke.fyp.utilities;
 
-import com.example.luke.fyp.Food;
-import com.example.luke.fyp.Nutrient;
+import com.example.luke.fyp.models.Food;
+import com.example.luke.fyp.models.Nutrient;
 
 import org.json.JSONArray;
 import org.json.JSONException;
