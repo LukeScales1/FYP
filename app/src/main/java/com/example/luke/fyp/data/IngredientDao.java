@@ -14,7 +14,7 @@ import static android.arch.persistence.room.OnConflictStrategy.REPLACE;
 /**
  * Created by Luke on 04/02/2018.
  *
- * DAO for saved ingredients. Work in progress
+ * DAO for ingredients. Work in progress
  */
 
 @Dao
@@ -26,17 +26,6 @@ public interface IngredientDao {
 
     @Query("SELECT * FROM Ingredient WHERE Ingredient.meal_id LIKE :mealId")
     List<Ingredient> findIngredientsOfMeal(long mealId);
-//    LiveData<
-
-    @Query("SELECT * FROM Ingredient")
-    List<Ingredient> findAllIngredients();
-//    LiveData<
-
-    @Query("SELECT * FROM Ingredient")
-    List<Ingredient> findAllIngredientsSync();
-
-//    @Insert(onConflict = IGNORE)
-//    void insertIngredient(Ingredient ingredient);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     long insertIngredient(Ingredient ingredient);

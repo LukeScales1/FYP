@@ -25,7 +25,6 @@ public interface MealDao {
 //    @Query("SELECT * FROM Meal WHERE Meal.id = :mealId")
 //    Meal findMealById(long mealId);
 
-//    @TypeConverters(DateConverter.class)
     @Query("SELECT * From Meal " +
             "WHERE Meal.mealTime > :dayStart " +
             "AND Meal.mealTime < :dayEnd")
@@ -35,12 +34,12 @@ public interface MealDao {
             "WHERE Meal.id = :mealId ")
     int retrieveMealType(long mealId);
 
-//    @TypeConverters(DateConverter.class)
+
     @Query("SELECT Meal.mealTime From Meal " +
             "WHERE Meal.id = :mealId ")
     Date retrieveMealTime(long mealId);
 
-//    @TypeConverters(DateConverter.class)
+
     @Query("SELECT * From Meal " +
             "INNER JOIN Ingredient ON Meal.id = Ingredient.meal_id " +
             "WHERE Meal.mealType LIKE :mealType " +
@@ -48,7 +47,6 @@ public interface MealDao {
             "AND Meal.mealTime < :dayEnd")
     List<Ingredient> findMealIngredientsByDayandType(int mealType, Date dayStart, Date dayEnd);
 
-//    @TypeConverters(DateConverter.class)
     @Query("SELECT Meal.id From Meal " +
             "WHERE Meal.mealType LIKE :mealType " +
             "AND Meal.mealTime > :dayStart " +
