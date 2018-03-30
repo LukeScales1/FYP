@@ -4,32 +4,192 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/activity_weight">
+    android:id="@+id/activity_weight"
+    android:background="@android:color/darker_gray"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/aw_linear"
+        >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:id="@+id/aw_linear1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:id="@+id/tv_title"
+                android:text="@string/title_tv"
+                android:textSize="16sp"
+                android:textColor="@android:color/white"/>
+
+            <TextView
+                android:id="@+id/tv_weight"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_margin="5dp"
+                android:paddingBottom="10dp"
+                android:gravity="bottom"
+                android:text="@string/weight_tv"
+                android:textSize="16sp"
+                android:layout_weight="1"
+                android:textColor="@android:color/white"/>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:id="@+id/aw_linear2"
+            android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:id="@+id/tv_item_name"
+            android:textSize="16sp"
+            android:textColor="@android:color/white"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/et_weight"
+            android:inputType="number"
+            android:layout_margin="5dp"
+            android:text="@string/default_weight"
+            android:textSize="16sp"
+            android:textColor="@android:color/white"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/confirm_weight_btn"
+        android:layout_below="@id/aw_linear"
+        android:id="@+id/btn_confirm"
+        android:layout_marginStart="45dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:id="@+id/tv_nutrient_title"
+        android:layout_below="@+id/btn_confirm"
+        android:text="@string/nutrients_title"
+        android:textSize="20sp"
+        android:textColor="@android:color/white"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="10dp"
+        android:padding="10dp"
+        android:layout_below="@id/tv_nutrient_title"
+        android:background="@android:color/background_light">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:id="@+id/aw_linear3">
+        <!--android:layout_below="@id/tv_nutrient_title">-->
+
+        <TextView
+            android:layout_width="170dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_title_name"
+            android:textColor="@android:color/black"
+            android:text="@string/title_name"/>
+
+        <TextView
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_title_value"
+            android:textColor="@android:color/black"
+            android:text="@string/title_value"/>
+
+        <TextView
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_title_unit"
+            android:textColor="@android:color/black"
+            android:text="@string/title_unit"/>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/black"
+        android:id="@+id/line1"
+        android:layout_marginTop="2dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"/>
+        <!--android:layout_below="@+id/aw_linear3"-->
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/black"
+        android:layout_marginTop="2dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:id="@+id/line2"/>
+        <!--android:layout_below="@+id/line1"-->
+
+
+
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_nutrient_items"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"/>
+        <!--android:layout_below="@+id/line2"-->
 
+
+    </LinearLayout>
 </RelativeLayout>
 <!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
     <!--xmlns:tools="http://schemas.android.com/tools"-->
     <!--android:layout_width="match_parent"-->
     <!--android:layout_height="match_parent"-->
-    <!--tools:context="com.example.luke.fyp.WeightActivity"-->
+    <!--tools:contecom.example.luke.fyp.activities.WeightActivityvity"-->
     <!--android:orientation="horizontal">-->
         <!--<TextView-->
             <!--android:layout_width="match_parent"-->
             <!--android:layout_height="wrap_content"-->
-            <!--android:id="@+id/tv_test"/>-->
+            <!--android:id="@+id/tv_test"-->
+            <!--android:layout_weight="1"/>-->
 
     <!--<TextView-->
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="wrap_content"-->
-        <!--android:id="@+id/tv_test1"/>-->
+        <!--android:id="@+id/tv_test1"-->
+        <!--android:layout_weight="1"/>-->
 
     <!--<TextView-->
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="wrap_content"-->
-        <!--android:id="@+id/tv_test2"/>-->
+        <!--android:id="@+id/tv_test2"-->
+        <!--android:layout_weight="1"/>-->
 <!--</LinearLayout>-->

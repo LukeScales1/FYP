@@ -1,6 +1,33 @@
 <resources>
     <string name="app_name">FYP</string>
 
+    <!--tensorflow-->
+    <string name="picture">Picture</string>
+    <string name="description_info">Info</string>
+    <string name="request_permission">This sample needs camera permission.</string>
+    <string name="camera_error">This device doesn\'t support Camera2 API.</string>
+    <string name="toggle_turn_on">NN:On</string>
+    <string name="toggle_turn_off">NN:Off</string>
+    <string name="toggle">Use NNAPI</string>
+
+    <string name="image_search">Search by Image</string>
+    <string name="image_text">Point the camera at your ingredient and press the button below:</string>
+    <string name="image_capture">Capture</string>
+
+    <!--search results activity-->
+    <string name="search_error">Sorry! No food items in our database match that entry. Please try again - adjust your picture or check your spelling</string>
+
+    <!--weight activity-->
+    <string name="default_weight">100</string>
+    <string name="weight_tv">Weight:</string>
+    <string name="title_tv">Item:</string>
+    <string name="nutrients_title">Nutritional Information:</string>
+    <string name="title_name">Nutrient</string>
+    <string name="title_value">Value</string>
+    <string name="title_unit">Unit</string>
+    <string name="confirm_weight_btn">Confirm Weight/Save Ingredient</string>
+
+
     <!--main cases-->
     <string name="case_energy">Energy</string>
     <string name="case_protein">Protein</string>
@@ -15,11 +42,13 @@
     <string name="name_energy">Calories</string>
     <string name="name_protein">Protein</string>
     <string name="name_fat">Fat</string>
-    <string name="name_carbs">Carbohydrate</string>
+    <string name="name_carbs">Carbohydrates</string>
     <string name="name_fiber">Fiber</string>
     <string name="name_sugar">Sugar</string>
     <string name="name_sodium">Sodium</string>
     <string name="name_saturated_fat">Saturated Fat</string>
+
+    <string name="test">100</string>
 
     <!--alternative cases - for potential future use-->
     <string name="case_water">Water</string>
@@ -49,4 +78,35 @@
     <string name="case_caffeine">Caffeine</string>
 
     <string name="ndbno_apples">09003</string>
+
+    <!--DailyViewActivity strings-->
+    <string name="title_activity_daily_view">DailyViewActivity</string>
+    <string name="daily_view_right_btn">Right button: use to change to next day</string>
+    <string name="daily_view_left_btn">Left button: use to change to previous day</string>
+    <string name="daily_view_no_meals">No meals stored for this day. Click the plus button to add a meal.</string>
+
+    <!--MealTypeFragment strings-->
+    <string name="meal_breakfast">Breakfast</string>
+    <string name="meal_lunch">Lunch</string>
+    <string name="meal_dinner">Dinner</string>
+    <string name="meal_snacks">Snacks</string>
+    <string name="meal_prompt">What type of meal would you like to add?</string>
+
+    <!--MealBuilderActivity strings -->
+    <string name="tv_add_ingredient">Use the field below to add ingredients to your meal:</string>
+    <string name="ingredient_search_prompt">Search for an ingredient here</string>
+    <string name="title_activity_meal_builder">MealBuilderActivity</string>
+    <string name="name_sats">Sats</string>
+    <string name="name_carb">Carbs</string>
+    <string name="name_prot">Prot.</string>
+    <string name="name_sod">Na</string>
+
+
+    <!-- Unit suffixes -->
+    <string name="unit_weight">g</string>
+    <string name="unit_cals">kcal</string>
+    <string name="unit_sodium">mg</string>
+
+    <!--MainActivity strings-->
+    <string name="search_button">Search</string>
 </resources>

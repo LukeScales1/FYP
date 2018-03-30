@@ -8,24 +8,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="8dp">
+        android:paddingBottom="8dp"
+        android:paddingTop="8dp">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="170dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:id="@+id/tv_nutrient_name"/>
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:id="@+id/tv_nutrient_value"/>
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:id="@+id/tv_nutrient_unit"/>
     </LinearLayout>
 
