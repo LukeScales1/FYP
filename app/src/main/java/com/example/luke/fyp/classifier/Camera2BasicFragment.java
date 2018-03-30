@@ -13,7 +13,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ==============================================================================*/
 
-package com.example.luke.fyp;
+package com.example.luke.fyp.classifier;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -54,10 +54,11 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.luke.fyp.R;
 import com.example.luke.fyp.activities.MealBuilderActivity;
 
 import java.io.IOException;
@@ -135,7 +136,7 @@ public class Camera2BasicFragment extends Fragment
   /** The {@link Size} of camera preview. */
   private Size previewSize;
 
-  private Button mBtn;
+  private ImageButton mBtn;
 
 
   /** {@link CameraDevice.StateCallback} is called when {@link CameraDevice} changes its state. */

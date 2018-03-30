@@ -24,7 +24,7 @@
         android:theme="@style/AppTheme">
         <!-- TODO: add parent activity hierarchy to actvities -->
         <activity
-            android:name=".CameraActivity"
+            android:name=".classifier.CameraActivity"
             android:label="@string/app_name">
         </activity>
         <activity android:name=".activities.MainActivity">

@@ -18,7 +18,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
-import com.example.luke.fyp.CameraActivity;
+import com.example.luke.fyp.classifier.CameraActivity;
 import com.example.luke.fyp.R;
 import com.example.luke.fyp.activities.fragments.MealTypeDialogFragment;
 import com.example.luke.fyp.adapters.IngredientAdapter;
@@ -216,20 +216,18 @@ public class MealBuilderActivity extends AppCompatActivity implements Ingredient
 
     @Override
     public void onBackPressed() {
-        mDb = AppDatabase.getInMemoryDatabase(getApplicationContext());
-                        List<Ingredient> ingredients = mDb.mealModel().findAllIngredientsFromMeal(currentMealId);
-                        if(ingredients.size() < 1){
-                            mDb.mealModel().deleteMealById(currentMealId);
-                            Intent intent = new Intent(MealBuilderActivity.this, DailyViewActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
+      if(ingredientList.size() < 1){
+            mDb.mealModel().deleteMealById(currentMealId);
+            Intent intent = new Intent(MealBuilderActivity.this, DailyViewActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
 
-                        MealBuilderActivity.super.onBackPressed();
-                        } else {
+        MealBuilderActivity.super.onBackPressed();
+        } else {
 //                            String numberOfIngs = String.valueOf(ingredients.size());
-                            finalDialogLaunch(ingredients.size());
-                        }
+            finalDialogLaunch(ingredientList.size());
+        }
 
 //        new AlertDialog.Builder(MealBuilderActivity.this)
 //                .setTitle("Really Exit?")
@@ -363,7 +361,9 @@ public class MealBuilderActivity extends AppCompatActivity implements Ingredient
     }
 
     private void loadIngredients(long mealId) {
-        ingredientList = mDb.mealModel().findAllIngredientsFromMeal(mealId);
+//        ingredientList = mDb.mealModel().findAllIngredientsFromMeal(mealId);
+        ingredientList = mDb.ingredientModel().findIngredientsOfMeal(mealId);
+
     }
 
 
@@ -460,7 +460,7 @@ public class MealBuilderActivity extends AppCompatActivity implements Ingredient
     public static void updateMeal(AppDatabase db, long mealId) {
         int mealType = db.mealModel().retrieveMealType(mealId);
         Date mealTime = db.mealModel().retrieveMealTime(mealId);
-        List<Ingredient> ingredients = db.mealModel().findAllIngredientsFromMeal(mealId);
+        List<Ingredient> ingredients = db.ingredientModel().findIngredientsOfMeal(mealId);
 
         Meal meal = ingredientsToMeal(ingredients, mealId, mealType, mealTime);
         addMeal(db, meal);

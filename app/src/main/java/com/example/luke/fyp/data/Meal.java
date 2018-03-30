@@ -18,7 +18,7 @@ public class Meal implements Comparable<Meal>{
     @PrimaryKey(autoGenerate = true)
     public long id;
 
-//    i.e. breakfast (1), lunch (2), dinner (3), snack (4).
+//    i.e. breakfast (1), lunch (2), dinner (3), snacks (4).
     public int mealType;
 
     public String mealTitle;
