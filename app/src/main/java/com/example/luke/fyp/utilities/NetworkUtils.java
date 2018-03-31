@@ -15,24 +15,24 @@ import java.util.Scanner;
 
 public class NetworkUtils {
 
-    private static String apiKey = "xmdjedl4QAgkXR6zdQwAYWVuteyigeljVtwSxRTR" ;
+    private static final String apiKey = "xmdjedl4QAgkXR6zdQwAYWVuteyigeljVtwSxRTR" ;
 
-    final static String BASE_URL =
+    private final static String BASE_URL =
             "https://api.nal.usda.gov/ndb/";
 
-    final static String REPORTS = "reports/?";
-    final static String SEARCH = "search/?";
+    private final static String REPORTS = "reports/?";
+    private final static String SEARCH = "search/?";
 
-    final static String SEARCH_QUERY = "q";
-    final static String BRAND_QUERY = "ds";
-    final static String API_QUERY = "api_key";
-    final static String TYPE_QUERY = "type";
-    final static String FORMAT_QUERY= "format";
-    final static String NDBNO_QUERY= "ndbno";
+    private final static String SEARCH_QUERY = "q";
+    private final static String BRAND_QUERY = "ds";
+    private final static String API_QUERY = "api_key";
+    private final static String TYPE_QUERY = "type";
+    private final static String FORMAT_QUERY= "format";
+    private final static String NDBNO_QUERY= "ndbno";
 
-    private static String type = "b";
-    private static String format = "json";
-    private static String brand = "Standard Reference";
+    private static final String type = "b";
+    private static final String format = "json";
+    private static final String brand = "Standard Reference";
 
     public static URL makeNdbnoUrl(String ndbno) {
         Uri builtUri = Uri.parse(BASE_URL + REPORTS).buildUpon()
@@ -69,11 +69,11 @@ public class NetworkUtils {
 
 
     public static String getResponseFromHttpUrl(URL url) throws IOException {
-        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+        HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
         try {
-            InputStream in = urlConnection.getInputStream();
+            InputStream inputStream = httpURLConnection.getInputStream();
 
-            Scanner scanner = new Scanner(in);
+            Scanner scanner = new Scanner(inputStream);
             scanner.useDelimiter("\\A");
 
             boolean hasInput = scanner.hasNext();
@@ -83,8 +83,7 @@ public class NetworkUtils {
                 return null;
             }
         } finally {
-            urlConnection.disconnect();
+            httpURLConnection.disconnect();
         }
     }
-
 }

@@ -16,23 +16,6 @@ import java.util.List;
 
 public class AppDBUtils {
 
-    private static AppDatabase mDb;
-
-
-
-//    public static List<Ingredient> fetchIngredientsOfMeal(Date start, Date end) {
-//
-//        return mDb.mealModel().findMealIngredientsByDayandType("B", start, end);
-////        if (mealIngredients.size() > 0) {
-////            for (Ingredient mealIngredient : mealIngredients) {
-////                testTV.append("ID: " + mealIngredient.id + "\nMeal ID:" + mealIngredient.meal_id + "\nWeight:" + mealIngredient.weight + "g\nTotal Calories: " + mealIngredient.calories.toString() + "\n\n");
-////            }
-////        } else {
-////            testTV.setText(getString(R.string.daily_view_no_meals));
-////        }
-//    }
-
-
     public static Meal ingredientsToMeal(List<Ingredient> mealIngredients, long mealId, int mealType, Date mealTime) {
 
         Double totalCalories = 0.0;
@@ -66,11 +49,11 @@ public class AppDBUtils {
     }
 
 
-    public static Date getTodayPlusDays(int daysAgo) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DATE, daysAgo);
-        return calendar.getTime();
-    }
+//    public static Date getTodayPlusDays(int daysAgo) {
+//        Calendar calendar = Calendar.getInstance();
+//        calendar.add(Calendar.DATE, daysAgo);
+//        return calendar.getTime();
+//    }
 
     public static long makeBlankIngredient(AppDatabase db){
         Ingredient ingredient = makeIngredient(0,0,null,null,null,null,null,null,null,null,null,null);
@@ -96,10 +79,20 @@ public class AppDBUtils {
     }
 
     public static Long addIngredient(final AppDatabase db, final Ingredient ingredient) {
-
         return db.ingredientModel().insertIngredient(ingredient);
     }
 
+    public static void deleteIngredientWithId(final AppDatabase db, final long ingredientId) {
+        db.ingredientModel().deleteIngredientById(ingredientId);
+    }
+
+    public static void deleteIngredientWithMealId(final AppDatabase db, final long mealId) {
+        db.ingredientModel().deleteIngredientByMealId(mealId);
+    }
+
+    public static List<Ingredient> returnIngredientsWithMealId(final AppDatabase db, final long mealId){
+        return db.ingredientModel().findIngredientsOfMeal(mealId);
+    }
 
     public static Long makeBlankMeal(AppDatabase db, int mealType, Date mealTime) {
 
@@ -128,17 +121,28 @@ public class AppDBUtils {
     }
 
     public static Long addMeal(final AppDatabase db, final Meal meal){
-
         return db.mealModel().insertMeal(meal);
     }
 
-//    public static Long addMeal(final AppDatabase db,  Date mealTime, final Meal meal){
-//
-//        meal.mealTime = mealTime;
-//        long newId = db.mealModel().insertMeal(meal);
-//        return newId;
-//    }
+    public static void deleteMealWithId(final AppDatabase db, final long mealId){
+        db.mealModel().deleteMealById((mealId));
+    }
 
+    public static int returnTypeOfMealWithId(final AppDatabase db, final long mealId){
+        return db.mealModel().retrieveMealType(mealId);
+    }
+
+    public static Date returnTimeOfMealWithId(final AppDatabase db, final long mealId){
+        return db.mealModel().retrieveMealTime(mealId);
+    }
+
+    public static List<Ingredient> returnIngredientsFromMealTypeAndDay(final AppDatabase db, int mealType, final Date dayStart, final Date dayEnd){
+        return db.mealModel().findMealIngredientsByDayandType(mealType, dayStart, dayEnd);
+    }
+
+    public static long returnMealIdFromTypeAndDay(final AppDatabase db, final int mealType, final Date dayStart, final Date dayEnd){
+        return db.mealModel().findMealIdByDayandType(mealType, dayStart, dayEnd);
+    }
 
     private static String getTitleFromInt(int mealType) {
         String mealTitle = "";

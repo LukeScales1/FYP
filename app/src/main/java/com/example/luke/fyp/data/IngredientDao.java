@@ -5,11 +5,8 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.TypeConverters;
-import android.arch.persistence.room.Update;
 
 import java.util.List;
-
-import static android.arch.persistence.room.OnConflictStrategy.REPLACE;
 
 /**
  * Created by Luke on 04/02/2018.
@@ -30,8 +27,6 @@ public interface IngredientDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     long insertIngredient(Ingredient ingredient);
 
-    @Update(onConflict = REPLACE)
-    void updateIngredient(Ingredient ingredient);
 
     @Query("DELETE FROM Ingredient")
     void deleteAll();
