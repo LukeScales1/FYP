@@ -324,6 +324,11 @@ public class Camera2BasicFragment extends Fragment
   public void onResume() {
     super.onResume();
 //    startBackgroundThread();
+      try {
+          classifier = new ImageClassifier(getActivity());
+      } catch (IOException e) {
+          Log.e(TAG, "Failed to initialize an image classifier.");
+      }
 
     // When the screen is turned off and turned back on, the SurfaceTexture is already
     // available, and "onSurfaceTextureAvailable" will not be called. In that case, we can open
@@ -339,6 +344,7 @@ public class Camera2BasicFragment extends Fragment
   @Override
   public void onPause() {
     closeCamera();
+//    classifier.clearTF();
 //    stopBackgroundThread();
     super.onPause();
   }

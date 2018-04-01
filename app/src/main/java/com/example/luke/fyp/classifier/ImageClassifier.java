@@ -81,7 +81,7 @@ public class ImageClassifier {
   private float[][] labelProbArray = null;
   /** multi-stage low pass filter **/
   private float[][] filterLabelProbArray = null;
-  private static final int FILTER_STAGES = 1;
+  private static final int FILTER_STAGES = 3;
   private static final float FILTER_FACTOR = 0.4f;
 
   private PriorityQueue<Map.Entry<String, Float>> sortedLabels =
@@ -124,9 +124,8 @@ public class ImageClassifier {
     applyFilter();
 
     // print the results
-    String textToShow = printTopKLabels();
-//    textToShow = Long.toString(endTime - startTime) + "ms" + textToShow;
-    return textToShow;
+    //    textToShow = Long.toString(endTime - startTime) + "ms" + textToShow;
+    return printTopKLabels();
   }
 
   void applyFilter(){
@@ -151,6 +150,12 @@ public class ImageClassifier {
     for(int j=0; j<num_labels; ++j){
       labelProbArray[0][j] = filterLabelProbArray[FILTER_STAGES-1][j];
     }
+  }
+
+  public void clearTF(){
+    labelList.clear();
+    labelProbArray = null;
+    filterLabelProbArray = null;
   }
 
   /** Closes tflite to release resources. */

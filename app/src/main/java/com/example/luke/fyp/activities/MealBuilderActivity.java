@@ -40,10 +40,18 @@ import static com.example.luke.fyp.activities.fragments.MealTypeDialogFragment.E
 import static com.example.luke.fyp.activities.fragments.MealTypeDialogFragment.EXTRA_MEAL_TYPE;
 import static com.example.luke.fyp.activities.fragments.MealTypeDialogFragment.EXTRA_MEAL_YEAR;
 import static com.example.luke.fyp.utilities.AppDBUtils.addMeal;
+import static com.example.luke.fyp.utilities.AppDBUtils.deleteIngredientWithId;
+import static com.example.luke.fyp.utilities.AppDBUtils.deleteIngredientWithMealId;
+import static com.example.luke.fyp.utilities.AppDBUtils.deleteMealWithId;
 import static com.example.luke.fyp.utilities.AppDBUtils.ingredientsToMeal;
 import static com.example.luke.fyp.utilities.AppDBUtils.makeBlankIngredient;
 import static com.example.luke.fyp.utilities.AppDBUtils.makeBlankMeal;
 import static com.example.luke.fyp.utilities.AppDBUtils.makeTimestamp;
+import static com.example.luke.fyp.utilities.AppDBUtils.returnIngredientsFromMealTypeAndDay;
+import static com.example.luke.fyp.utilities.AppDBUtils.returnIngredientsWithMealId;
+import static com.example.luke.fyp.utilities.AppDBUtils.returnMealIdFromTypeAndDay;
+import static com.example.luke.fyp.utilities.AppDBUtils.returnTimeOfMealWithId;
+import static com.example.luke.fyp.utilities.AppDBUtils.returnTypeOfMealWithId;
 
 public class MealBuilderActivity extends AppCompatActivity implements IngredientAdapter.ItemClickListener, LifecycleObserver {
 
@@ -98,21 +106,7 @@ public class MealBuilderActivity extends AppCompatActivity implements Ingredient
         mDb = AppDatabase.getInMemoryDatabase(getApplicationContext());
 
         Intent myIntent = getIntent();
-        int year = myIntent.getIntExtra(EXTRA_MEAL_YEAR, 0);
-        int month = myIntent.getIntExtra(EXTRA_MEAL_MONTH, 0);
-        int day = myIntent.getIntExtra(EXTRA_MEAL_DAY, 0);
-        mealType = myIntent.getIntExtra(EXTRA_MEAL_TYPE, 0);
-        boolean overwrite = myIntent.getBooleanExtra(MealTypeDialogFragment.EXTRA_OVERWRITE_CASE,false);
-        if(overwrite){
-            if (mealType == 0) {
-                throw new NullPointerException("Houston, we have a problem: mealType must be passed to overwrite meal");
-            }
-            long mealId = overwriteIngredients(mealType, day, month, year);
-            ingredientAdapter = new IngredientAdapter(ingredientList);
-            ingredientAdapter.setClickListener(this);
-            itemList.setAdapter(ingredientAdapter);
-            currentMealId = mealId;
-        } else {
+
             long mealId = myIntent.getLongExtra(MealTypeDialogFragment.EXTRA_MEAL_ID, 0);
             if (mealId != 0) {
                 loadIngredients(mealId);
@@ -120,30 +114,32 @@ public class MealBuilderActivity extends AppCompatActivity implements Ingredient
                 ingredientAdapter.setClickListener(this);
                 itemList.setAdapter(ingredientAdapter);
                 currentMealId = mealId;
-            } else {
-                if (year == 0) {
-                    throw new NullPointerException("Houston, we have a problem: date must be set");
-                }
+            } else { //dates
+                mealType = myIntent.getIntExtra(EXTRA_MEAL_TYPE, 0);
                 if (mealType == 0) {
                     throw new NullPointerException("Houston, we have a problem: mealType must be set for new meal creation");
                 }
+                int year = myIntent.getIntExtra(EXTRA_MEAL_YEAR, 0);
+                int month = myIntent.getIntExtra(EXTRA_MEAL_MONTH, 13); //Jan-Dec = 0 - 11; 12 reserved for lunar calendars
+                int day = myIntent.getIntExtra(EXTRA_MEAL_DAY, 0);
+                if (year == 0 | month == 13 | day == 0 ) { //weightactivity
+                    throw new NullPointerException("Houston, we have a problem: date must be passed");
+                }
+                boolean overwrite = myIntent.getBooleanExtra(MealTypeDialogFragment.EXTRA_OVERWRITE_CASE,false);
+                if(overwrite){
+                    mealId = overwriteIngredients(mealType, day, month, year);
+                    loadIngredients(mealId);
+                    ingredientAdapter = new IngredientAdapter(ingredientList);
+                    ingredientAdapter.setClickListener(this);
+                    itemList.setAdapter(ingredientAdapter);
+                    currentMealId = mealId;
+                } else {
+
                 Date mealTime = makeTimestamp(year, month, day);
                 currentMealId = makeBlankMeal(mDb, mealType, mealTime);
             }
         }
 
-//        mealType = myIntent.getIntExtra(EXTRA_MEAL_TYPE, 1);
-//        Toast.makeText(MealBuilderActivity.this, "Meal Type = " + mealType, Toast.LENGTH_SHORT).show();
-
-//        Calendar c = Calendar.getInstance();
-//        int year = myIntent.getIntExtra(MealTypeDialogFragment.EXTRA_MEAL_YEAR, c.get(Calendar.YEAR));
-//        int month = myIntent.getIntExtra(MealTypeDialogFragment.EXTRA_MEAL_MONTH, c.get(Calendar.MONTH));
-//        int day = myIntent.getIntExtra(MealTypeDialogFragment.EXTRA_MEAL_DAY, c.get(Calendar.DAY_OF_MONTH));
-//
-//
-//        mealTime = makeTimestamp(year, month, day);
-
-//        currentMeal = makeMeal(Long.parseLong("0"), mealType, mealTime, 0.0,0.0,0.0,0.0,0.0, 0.0,0.0);
 //        new MealCreateTask().execute(currentMeal);
 
         searchInput = findViewById(R.id.et_search);
@@ -217,7 +213,8 @@ public class MealBuilderActivity extends AppCompatActivity implements Ingredient
     @Override
     public void onBackPressed() {
       if(ingredientList.size() < 1){
-            mDb.mealModel().deleteMealById(currentMealId);
+          deleteMealWithId(mDb, currentMealId);
+//            mDb.mealModel().deleteMealById(currentMealId);
             Intent intent = new Intent(MealBuilderActivity.this, DailyViewActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -225,36 +222,8 @@ public class MealBuilderActivity extends AppCompatActivity implements Ingredient
 
         MealBuilderActivity.super.onBackPressed();
         } else {
-//                            String numberOfIngs = String.valueOf(ingredients.size());
             finalDialogLaunch(ingredientList.size());
         }
-
-//        new AlertDialog.Builder(MealBuilderActivity.this)
-//                .setTitle("Really Exit?")
-//                .setMessage("Are you sure you want to exit?")
-//                .setNegativeButton(android.R.string.no, null)
-//                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-//
-//                    public void onClick(DialogInterface arg0, int arg1) {
-//                        //Check if meal is empty, delete if empty i.e. 0 ingredients in meal
-//                        mDb = AppDatabase.getInMemoryDatabase(getApplicationContext());
-//                        List<Ingredient> ingredients = mDb.mealModel().findAllIngredientsFromMeal(currentMealId);
-//                        if(ingredients.size() < 1){
-//                            mDb.mealModel().deleteMealById(currentMealId);
-//                        } else {
-////                            String numberOfIngs = String.valueOf(ingredients.size());
-////                            finalDialogLaunch(numberOfIngs);
-//                            finalDialogLaunch(ingredients.size());
-//                        }
-////                        Intent intent = new Intent(MealBuilderActivity.this, DailyViewActivity.class);
-////                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-////                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-////                        startActivity(intent);
-//
-//                        MealBuilderActivity.super.onBackPressed();
-////                        finishAndRemoveTask ();
-//                    }
-//                }).create().show();
     }
 
     private void finalDialogLaunch(int numberOfIngs) {
@@ -266,8 +235,10 @@ public class MealBuilderActivity extends AppCompatActivity implements Ingredient
 
                     public void onClick(DialogInterface arg0, int arg1) {
                         mDb = AppDatabase.getInMemoryDatabase(getApplicationContext());
-                        mDb.ingredientModel().deleteIngredientByMealId(currentMealId);
-                        mDb.mealModel().deleteMealById(currentMealId);
+                        deleteIngredientWithMealId(mDb, currentMealId);
+                        deleteMealWithId(mDb, currentMealId);
+//                        mDb.ingredientModel().deleteIngredientByMealId(currentMealId);
+//                        mDb.mealModel().deleteMealById(currentMealId);
                         Intent intent = new Intent(MealBuilderActivity.this, DailyViewActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -301,20 +272,20 @@ public class MealBuilderActivity extends AppCompatActivity implements Ingredient
                         Intent intent = new Intent(MealBuilderActivity.this, WeightActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        //TODO: pass necessary shit to weight activity
                         intent.putExtra(EXTRA_WEIGHT_CASE, 0);
                         intent.putExtra(EXTRA_INGREDIENT_ID, currentIngId);
                         intent.putExtra(EXTRA_MEAL_ID, currentMealId);
                         startActivity(intent);
-//                        finishAndRemoveTask ();
                     }
                 })
                 .setNegativeButton(android.R.string.no, null)
                 .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
 
+                    //Deletes selected ingredient from DB, iterates through ingredientList to remove from UI
                     public void onClick(DialogInterface arg0, int arg1) {
                         mDb = AppDatabase.getInMemoryDatabase(getApplicationContext());
-                        mDb.ingredientModel().deleteIngredientById(currentIngId);
+//                        mDb.ingredientModel().deleteIngredientById(currentIngId);
+                        deleteIngredientWithId(mDb, currentIngId);
                         Iterator<Ingredient> i = ingredientList.iterator();
                         while (i.hasNext()) {
                             Ingredient thisIngredient = i.next();
@@ -323,30 +294,18 @@ public class MealBuilderActivity extends AppCompatActivity implements Ingredient
                             }
                         }
                         loadIngredients(currentMealId);
-                        //TODO: get meal type, time whatever from currentmealid, ingredients to meal
                         ingredientAdapter.notifyDataSetChanged();
-                        int mealType = mDb.mealModel().retrieveMealType(currentMealId);
-                        Date mealTime = mDb.mealModel().retrieveMealTime(currentMealId);
+
+                        //With ingredients of meal updated, retrieves type and time of meal to update meal totals
+//                        int mealType = mDb.mealModel().retrieveMealType(currentMealId);
+//                        Date mealTime = mDb.mealModel().retrieveMealTime(currentMealId);
+                        int mealType = returnTypeOfMealWithId(mDb,currentMealId);
+                        Date mealTime = returnTimeOfMealWithId(mDb, currentMealId);
 
                         Meal meal = ingredientsToMeal(ingredientList, currentMealId, mealType, mealTime);
                         addMeal(mDb, meal);
-//                            Intent intent = new Intent(MealBuilderActivity.this, DailyViewActivity.class);
-//                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                            finishAndRemoveTask ();
-//                            startActivity(intent);
-
-//                        MealBuilderActivity.super.onBackPressed();
-//                        finishAndRemoveTask ();
                     }
                 }).create().show();
-//        Intent intent = new Intent(MealBuilderActivity.this, WeightActivity.class);
-//        intent.putExtra(EXTRA_WEIGHT_CASE, 0);
-////        Ingredient ingredient = ingredientList.get(i);
-//        intent.putExtra(EXTRA_INGREDIENT_NAME, ingredient.name);
-//        intent.putExtra(EXTRA_INGREDIENT_ID, ingredient.id);
-//        intent.putExtra(EXTRA_MEAL_ID, currentMealId);
-//        startActivity(intent);
     }
 
     private long overwriteIngredients(int mealType, int day, int month, int year) {
@@ -356,13 +315,16 @@ public class MealBuilderActivity extends AppCompatActivity implements Ingredient
         calendar.set(Calendar.DAY_OF_MONTH, day);
         Date dayStart = DailyViewActivity.setDateLimits(calendar, 0);
         Date dayEnd = DailyViewActivity.setDateLimits(calendar, 1);
-        ingredientList = mDb.mealModel().findMealIngredientsByDayandType(mealType, dayStart, dayEnd);
-        return mDb.mealModel().findMealIdByDayandType(mealType, dayStart, dayEnd);
+//        ingredientList = mDb.mealModel().findMealIngredientsByDayandType(mealType, dayStart, dayEnd);
+        ingredientList = returnIngredientsFromMealTypeAndDay(mDb, mealType, dayStart, dayEnd);
+//        return mDb.mealModel().findMealIdByDayandType(mealType, dayStart, dayEnd);
+        return returnMealIdFromTypeAndDay(mDb, mealType, dayStart, dayEnd);
     }
 
     private void loadIngredients(long mealId) {
 //        ingredientList = mDb.mealModel().findAllIngredientsFromMeal(mealId);
-        ingredientList = mDb.ingredientModel().findIngredientsOfMeal(mealId);
+//        ingredientList = mDb.ingredientModel().findIngredientsOfMeal(mealId);
+        ingredientList = returnIngredientsWithMealId(mDb, mealId);
 
     }
 
@@ -424,7 +386,6 @@ public class MealBuilderActivity extends AppCompatActivity implements Ingredient
         @Override
         protected void onPostExecute(String searchResults){
             if (searchResults != null && !searchResults.equals("")){
-//                testResultsText.setText(searchResults);
                 Intent intent = new Intent(currentContext, SearchResultsActivity.class);
                 intent.putExtra(SearchResultsActivity.EXTRA_FOOD_DATA, searchResults);
                 intent.putExtra(EXTRA_INGREDIENT_ID, currentIngId);
@@ -458,9 +419,12 @@ public class MealBuilderActivity extends AppCompatActivity implements Ingredient
     }
 
     public static void updateMeal(AppDatabase db, long mealId) {
-        int mealType = db.mealModel().retrieveMealType(mealId);
-        Date mealTime = db.mealModel().retrieveMealTime(mealId);
-        List<Ingredient> ingredients = db.ingredientModel().findIngredientsOfMeal(mealId);
+//        int mealType = db.mealModel().retrieveMealType(mealId);
+//        Date mealTime = db.mealModel().retrieveMealTime(mealId);
+//        List<Ingredient> ingredients = db.ingredientModel().findIngredientsOfMeal(mealId);
+        int mealType = returnTypeOfMealWithId(db, mealId);
+        Date mealTime = returnTimeOfMealWithId(db, mealId);
+        List<Ingredient> ingredients = returnIngredientsWithMealId(db, mealId);
 
         Meal meal = ingredientsToMeal(ingredients, mealId, mealType, mealTime);
         addMeal(db, meal);
@@ -474,7 +438,8 @@ public class MealBuilderActivity extends AppCompatActivity implements Ingredient
         @Override
         public void onClick(View view) {
             mDb = AppDatabase.getInMemoryDatabase(getApplicationContext());
-            mDb.ingredientModel().deleteIngredientById(currentIngId);
+            deleteIngredientWithId(mDb, currentIngId);
+//            mDb.ingredientModel().deleteIngredientById(currentIngId);
             ingredientAdapter.notifyDataSetChanged();
         }
     }

@@ -18,17 +18,17 @@ public final class UsdaJsonUtils {
 
     public static Nutrient[] getNutrientDataFromJson(String nutrientJsonString) throws JSONException{
 
-        final String FDA_REPORT = "report";
-        final String FDA_FOOD = "food";
-        final String FDA_NUTRIENTS = "nutrients";
-        final String FDA_NAME = "name";
-        final String FDA_UNIT = "unit";
-        final String FDA_VALUE = "value";
+        final String USDA_REPORT = "report";
+        final String USDA_FOOD = "food";
+        final String USDA_NUTRIENTS = "nutrients";
+        final String USDA_NAME = "name";
+        final String USDA_UNIT = "unit";
+        final String USDA_VALUE = "value";
 
         JSONObject nutrientJson = new JSONObject(nutrientJsonString);
-        JSONObject nutrientReport = nutrientJson.getJSONObject(FDA_REPORT);
-        JSONObject nutrientFood = nutrientReport.getJSONObject(FDA_FOOD);
-        JSONArray nutrientArray = nutrientFood.getJSONArray(FDA_NUTRIENTS);
+        JSONObject nutrientReport = nutrientJson.getJSONObject(USDA_REPORT);
+        JSONObject nutrientFood = nutrientReport.getJSONObject(USDA_FOOD);
+        JSONArray nutrientArray = nutrientFood.getJSONArray(USDA_NUTRIENTS);
 
         Nutrient[] nutrients = new Nutrient[nutrientArray.length()];
 
@@ -38,24 +38,24 @@ public final class UsdaJsonUtils {
 
             JSONObject results = nutrientArray.getJSONObject(i);
 
-            nutrients[i].setName(results.getString(FDA_NAME));
-            nutrients[i].setUnit(results.getString(FDA_UNIT));
-            nutrients[i].setValue(results.getString(FDA_VALUE));
+            nutrients[i].setName(results.getString(USDA_NAME));
+            nutrients[i].setUnit(results.getString(USDA_UNIT));
+            nutrients[i].setValue(results.getString(USDA_VALUE));
         }
         return nutrients;
     }
 
     public static Food[] getFoodDataFromJson(String foodJsonString) throws JSONException{
 
-        final String FDA_LIST = "list";
-        final String FDA_ITEM = "item";
-        final String FDA_GROUP = "group";
-        final String FDA_NAME = "name";
-        final String FDA_NDBNO = "ndbno";
+        final String USDA_LIST = "list";
+        final String USDA_ITEM = "item";
+        final String USDA_GROUP = "group";
+        final String USDA_NAME = "name";
+        final String USDA_NDBNO = "ndbno";
 
         JSONObject foodJson = new JSONObject(foodJsonString);
-        JSONObject foodList = foodJson.getJSONObject(FDA_LIST);
-        JSONArray foodArray = foodList.getJSONArray(FDA_ITEM);
+        JSONObject foodList = foodJson.getJSONObject(USDA_LIST);
+        JSONArray foodArray = foodList.getJSONArray(USDA_ITEM);
 
         Food[] foods = new Food[foodArray.length()];
 
@@ -65,9 +65,9 @@ public final class UsdaJsonUtils {
 
             JSONObject results = foodArray.getJSONObject(i);
 
-            foods[i].setGroup(results.getString(FDA_GROUP));
-            foods[i].setName(results.getString(FDA_NAME));
-            foods[i].setNdbno(results.getString(FDA_NDBNO));
+            foods[i].setGroup(results.getString(USDA_GROUP));
+            foods[i].setName(results.getString(USDA_NAME));
+            foods[i].setNdbno(results.getString(USDA_NDBNO));
         }
 
         return foods;

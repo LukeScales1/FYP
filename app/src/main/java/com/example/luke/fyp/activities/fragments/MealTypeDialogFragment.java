@@ -113,7 +113,7 @@ public class MealTypeDialogFragment extends BottomSheetDialogFragment {
                     if (mListener != null) {
                         mListener.onItemClicked(getAdapterPosition());
                         int mealType = getAdapterPosition() + 1;
-                        //Checks if mealType already in database - if statement simplified
+                        //Checks if selected mealType already in database
                         boolean duplicateB = mealType == 1 && checkB();
                         boolean duplicateL = mealType == 2 && checkL();
                         boolean duplicateD = mealType == 3 && checkD();

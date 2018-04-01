@@ -7,16 +7,17 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.example.luke.fyp.models.Nutrient;
 import com.example.luke.fyp.R;
 import com.example.luke.fyp.adapters.NutritionalInfoAdapter;
 import com.example.luke.fyp.data.AppDatabase;
 import com.example.luke.fyp.data.Ingredient;
+import com.example.luke.fyp.models.Nutrient;
 import com.example.luke.fyp.utilities.UsdaJsonUtils;
 
 import org.json.JSONException;
@@ -79,6 +80,15 @@ public class WeightActivity extends AppCompatActivity {
         weightTitle= findViewById(R.id.tv_weight);
 
         weightIn = findViewById(R.id.et_weight);
+        weightIn.setOnKeyListener(new View.OnKeyListener() {
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    saveIngredient();
+                    return true;
+                }
+                return false;
+            }
+        });
 
         mDb = AppDatabase.getInMemoryDatabase(getApplicationContext());
 
@@ -95,25 +105,10 @@ public class WeightActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                for(int i = 0; i < nutrientList.size(); i++){
-                    Nutrient nutrient = nutrientList.get(i);
-                    String nutrientName = nutrient.getName();
-                    String nutrientValue = nutrient.getValue();
-                    checkNutrient(nutrientName, nutrientValue);
-                }
-
-                //TODO: pass ndbno and save, or store all 26 nutrients in Database
-                Ingredient ingredient1 = makeIngredient(ingredientId, mealId, itemName, weight, "01001", CalVal, FatVal, SatVal, CarbVal, SugVal, ProVal, SodVal);
-                addIngredient(mDb, ingredient1);
-
-                MealBuilderActivity.updateMeal(mDb, mealId);
-
-                Intent intent = new Intent(WeightActivity.this, MealBuilderActivity.class);
-                intent.putExtra(EXTRA_MEAL_ID, mealId);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
+                saveIngredient();
             }
+
+
         });
 
         Intent myIntent = getIntent();
@@ -175,8 +170,6 @@ public class WeightActivity extends AppCompatActivity {
                 for (Nutrient aNutrientInfo : nutrientInfo) {
 
                     String Name = aNutrientInfo.getName();
-//            String Value = nutrientInfo[i].getValue();
-//            String Unit = nutrientInfo[i].getUnit();
 
                     if (Name.equals(CalorieCheck)) {
                         aNutrientInfo.setName(Calories);
@@ -204,14 +197,17 @@ public class WeightActivity extends AppCompatActivity {
                     }
                 }
 
-
                 nutrientList.addAll(Arrays.asList(nutrientInfo));
                 Nutrient water = nutrientList.get(0);
                 nutrientList.remove(0);
                 nutrientList.add(water);
             }
 
-        weight = Double.valueOf(weightIn.getText().toString());
+            if(weightIn.getText().toString().length() != 0) {
+                weight = Double.valueOf(weightIn.getText().toString());
+            } else {
+                weight = 100.0;
+            }
 
         infoAdapter = new NutritionalInfoAdapter(nutrientList, weight);
         itemList.setAdapter(infoAdapter);
@@ -228,7 +224,7 @@ public class WeightActivity extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 String weightVal = weightIn.getText().toString();
                 if(weightVal.length() == 0) {
-                    weightVal = "1";
+                    weightVal = "0";
                 }
                     weight = Double.valueOf(weightVal);
                     infoAdapter = new NutritionalInfoAdapter(nutrientList, weight);
@@ -302,6 +298,27 @@ public class WeightActivity extends AppCompatActivity {
 
 
 //
+    }
+
+    private void saveIngredient() {
+        for(int i = 0; i < nutrientList.size(); i++){
+            Nutrient nutrient = nutrientList.get(i);
+            String nutrientName = nutrient.getName();
+            String nutrientValue = nutrient.getValue();
+            checkNutrient(nutrientName, nutrientValue);
+        }
+
+        //TODO: pass ndbno and save, or store all 26 nutrients in Database
+        Ingredient ingredient1 = makeIngredient(ingredientId, mealId, itemName, weight, "01001", CalVal, FatVal, SatVal, CarbVal, SugVal, ProVal, SodVal);
+        addIngredient(mDb, ingredient1);
+
+        MealBuilderActivity.updateMeal(mDb, mealId);
+
+        Intent intent = new Intent(WeightActivity.this, MealBuilderActivity.class);
+        intent.putExtra(EXTRA_MEAL_ID, mealId);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
     }
 
     public  void checkNutrient(String name, String val){
