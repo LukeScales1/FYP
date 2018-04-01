@@ -11,11 +11,14 @@ import java.util.Scanner;
 
 /**
  * Created by Luke on 29/09/2017.
+ * Queries USDA nutritional info database with Food Search or Nutrient Report, returns JSON
  */
 
 public class NetworkUtils {
 
-    private static final String apiKey = "xmdjedl4QAgkXR6zdQwAYWVuteyigeljVtwSxRTR" ;
+
+    private static String apiKey = "enter your USDA API key here!" ;
+
 
     private final static String BASE_URL =
             "https://api.nal.usda.gov/ndb/";
