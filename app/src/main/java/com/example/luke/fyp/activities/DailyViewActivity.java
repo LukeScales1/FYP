@@ -151,14 +151,10 @@ public class DailyViewActivity extends AppCompatActivity implements MealTypeDial
             } else {
                 x = 1;
             }
+            changeCount = x;
             DialogFragment datePicker = new DatePickerFragment();
             datePicker.show(getFragmentManager(),"Date Picker");
-            zeroChangeCount(x);
         }
-    }
-
-    public void zeroChangeCount(int diff){
-        changeCount = diff;
     }
 
     public void changeDay(int offset){
@@ -266,6 +262,7 @@ public class DailyViewActivity extends AppCompatActivity implements MealTypeDial
     }
 
     private void checkMeals(List<Meal> meals) {
+        B = false; L = false; D = false; S = false;
         for (Meal meal : meals) {
             int type = meal.mealType;
             if (type == 1) {

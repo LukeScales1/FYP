@@ -66,9 +66,10 @@
             android:id="@+id/et_weight"
             android:inputType="number"
             android:layout_margin="5dp"
-            android:text="@string/default_weight"
+            android:hint="@string/default_weight"
             android:textSize="16sp"
             android:textColor="@android:color/white"/>
+            <!--android:text="@string/default_weight"-->
         </LinearLayout>
     </LinearLayout>
 
