@@ -570,7 +570,7 @@ public class Camera2BasicFragment extends Fragment
 //      e.printStackTrace();
 //    }
 //  }
-
+//
 //    static final int REQUEST_IMAGE_CAPTURE = 1;
 //
 //    private void dispatchTakePictureIntent() {
@@ -587,7 +587,7 @@ public class Camera2BasicFragment extends Fragment
 //            mImageView.setImageBitmap(imageBitmap);
 //        }
 //    }
-
+//
 //  /** Takes photos and classify them periodically. */
 //  private Runnable periodicClassify =
 //      new Runnable() {

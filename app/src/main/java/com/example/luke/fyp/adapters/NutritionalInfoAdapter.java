@@ -50,11 +50,9 @@ public class NutritionalInfoAdapter extends RecyclerView.Adapter<NutritionalInfo
         dynamicVal = quantityPer100g * multiplier;
 
         holder.nutrientNameTV.setText(nutrientName);
-//        holder.nutrientValTV.setText(nutrientVal);
         double testvar = new BigDecimal(dynamicVal).setScale(1, RoundingMode.HALF_UP).doubleValue();
        String val =  Double.toString(testvar);
         holder.nutrientValTV.setText(val);
-//        holder.nutrientValTV.setText(Integer.toString(weight));
         holder.nutrientUnitTV.setText(nutrientUnit);
     }
 

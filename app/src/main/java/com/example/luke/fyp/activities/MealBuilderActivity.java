@@ -78,17 +78,6 @@ public class MealBuilderActivity extends AppCompatActivity implements Ingredient
     private EditText searchInput;
     String search = "";
 
-//    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-//    public void deleteEmptyMeals() {
-//        mDb = AppDatabase.getInMemoryDatabase(getApplicationContext());
-//        List<Ingredient> ingredients = mDb.mealModel().findAllIngredientsFromMeal(currentMealId);
-//        if(ingredients.size() < 1){
-//            mDb.mealModel().deleteMealById(currentMealId);
-//            Intent intent = new Intent(MealBuilderActivity.this, DailyViewActivity.class);
-//            startActivity(intent);
-////            finish();
-//        }
-//    }
 
     //TODO: pass back date to Dailyview so it returns to the same date
 
@@ -128,10 +117,11 @@ public class MealBuilderActivity extends AppCompatActivity implements Ingredient
                 boolean overwrite = myIntent.getBooleanExtra(MealTypeDialogFragment.EXTRA_OVERWRITE_CASE,false);
                 if(overwrite){
                     mealId = overwriteIngredients(mealType, day, month, year);
-                    loadIngredients(mealId);
-                    ingredientAdapter = new IngredientAdapter(ingredientList);
-                    ingredientAdapter.setClickListener(this);
-                    itemList.setAdapter(ingredientAdapter);
+                    deleteIngredientWithMealId(mDb, mealId);
+//                    loadIngredients(mealId);
+//                    ingredientAdapter = new IngredientAdapter(ingredientList);
+//                    ingredientAdapter.setClickListener(this);
+//                    itemList.setAdapter(ingredientAdapter);
                     currentMealId = mealId;
                 } else {
 
@@ -182,39 +172,12 @@ public class MealBuilderActivity extends AppCompatActivity implements Ingredient
         final long ingredientId = ingredient.id;
         Snackbar.make(v, ingredientName + ": would you like to edit this meal?", Snackbar.LENGTH_LONG)
                 .setAction("Delete", new MyDeleteIngredientListener(ingredient.id)).show();
-//        new AlertDialog.Builder(this)
-//                .setTitle("Edit/Delete Ingredient")
-//                .setMessage("Would you like to edit " + ingredientName + "?")
-//                .setNeutralButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialogInterface, int i) {
-//                        finishAndRemoveTask ();
-//                    }
-//                })
-//                .setNegativeButton(android.R.string.no, null)
-//                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
-//
-//                    public void onClick(DialogInterface arg0, int arg1) {
-//                        mDb = AppDatabase.getInMemoryDatabase(getApplicationContext());
-//                        mDb.ingredientModel().deleteIngredientById(ingredientId);
-////                            Intent intent = new Intent(MealBuilderActivity.this, DailyViewActivity.class);
-////                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-////                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-////                            finishAndRemoveTask ();
-////                            startActivity(intent);
-//
-//                        MealBuilderActivity.super.onBackPressed();
-////                        finishAndRemoveTask ();
-//                    }
-//                }).create().show();
-
     }
 
     @Override
     public void onBackPressed() {
       if(ingredientList.size() < 1){
           deleteMealWithId(mDb, currentMealId);
-//            mDb.mealModel().deleteMealById(currentMealId);
             Intent intent = new Intent(MealBuilderActivity.this, DailyViewActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
